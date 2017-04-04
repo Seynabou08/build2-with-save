@@ -184,7 +184,9 @@ int main(int argc, char* argv[])
 				//Displaying the possible actions the player can make
 				cout << "Player " << i+1 <<" is at " << newMap.cities[players.at(i).getLocation()]->getName() << endl;
 				cout << "Player " << i+1 << ": Choose your action..." << endl;
+
 				players.at(i).displayActionsLeft();
+
 				cout << "1. Drive/Ferry" << endl;
 				cout << "2. Direct Flight" << endl;
 				cout << "3. Charter Flight" << endl;
@@ -193,6 +195,8 @@ int main(int argc, char* argv[])
 				cout << "6. Treat Disease" << endl;
 				cout << "7. Share Knowledge" << endl;
 				cout << "8. Discover a Cure" << endl;
+				cout << "9. Play event card" << endl;
+
 				char action;
 				cin >> action;
 
@@ -200,8 +204,6 @@ int main(int argc, char* argv[])
 				case '1':	//Drive/Ferry
 				{
 					newMap.showCity(players.at(i).getLocation());
-					int city;
-					cin >> city;
 					players.at(i).move(newMap);
 
 					break;
@@ -210,8 +212,8 @@ int main(int argc, char* argv[])
 				{
 					players.at(i).displayHand();
 
-					int cardInt = 0;
-					while (cardInt == 0 || cardInt >= players.at(i).getHandSize()) {
+					int cardInt = -1;
+					while (cardInt == -1 || cardInt >= players.at(i).getHandSize()) {
 						cin >> cardInt;
 					}
 
@@ -224,8 +226,8 @@ int main(int argc, char* argv[])
 				{
 					players.at(i).displayHand();
 
-					int cardInt = 0;
-					while (cardInt == 0 || cardInt >= players.at(i).getHandSize()) {
+					int cardInt = -1;
+					while (cardInt == -1 || cardInt >= players.at(i).getHandSize()) {
 						cin >> cardInt;
 					}
 
@@ -328,6 +330,23 @@ int main(int argc, char* argv[])
 					players.at(i).discard(cardInt5);
 
 					break;
+				}
+				case '9':	//evetn cards
+				{
+					/*
+					if (players.at(i).getHand()[cardInt]->getType() == "Event Card")
+					players.at(i).displayHand();
+
+					int cardInt = 0;
+					while (cardInt == 0 || cardInt >= players.at(i).getHandSize()) {
+						cin >> cardInt;
+					}
+
+					players.at(i).flight(players.at(i).getHand()[cardInt]->getId());
+
+					players.at(i).discard(cardInt);
+					break;
+					*/
 				}
 				}
 			}
