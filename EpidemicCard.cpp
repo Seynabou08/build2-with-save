@@ -11,6 +11,12 @@ EpidemicCard::~EpidemicCard()
 {
 }
 
+void EpidemicCard::setEpidemic(int a)
+{
+	this->setName("Epidemic Card");
+	this->setId(a);
+}
+
 void EpidemicCard::playCard(InfectionDeck& deck)
 {
 	//Move the infection rate marker forward 1 space on the Infection Rate Track.

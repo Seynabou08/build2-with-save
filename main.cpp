@@ -1,5 +1,7 @@
 #include "Map.h"
+#include "EventCard.h"
 #include "InfectionDeck.h"
+#include "EpidemicCard.h"
 #include <iostream>
 #include <algorithm>
 #include "Player.h"
@@ -96,6 +98,7 @@ int main(int argc, char* argv[])
 
 	// Setting up the player deck
 	vector<Card*> playerDeck;
+	
 		
 	for (int i = 0; i < newMap.cities.size(); i++) {
 		CityCard* ccard = new CityCard(newMap.cities[i]);
@@ -104,6 +107,27 @@ int main(int argc, char* argv[])
 
 		playerDeck.push_back(card);
 	}
+
+	//Generating event card to add to player deck
+	string eventNames[] = { "Airlift", "One Quiet Night", "Resilient population",
+		"Government Grant", "Forcast"};
+
+	EventCard* eventCard = new EventCard();
+	for (int i = 0; i < 5; i++)
+	{
+		eventCard->setEvent(eventNames[i], i);
+		playerDeck.push_back(eventCard);
+	}
+
+	//Generating epidemic card to add to player deck
+	
+	EpidemicCard* epidemicCard = new EpidemicCard();
+	for (int i = 0; i < 5; i++)
+	{
+		epidemicCard->setEpidemic(i);
+		playerDeck.push_back(epidemicCard);
+	}
+	
 
 	// GENERATING ROLE DECK
 	vector<Role*> roleDeck;
@@ -114,8 +138,7 @@ int main(int argc, char* argv[])
 	Role* roleCard = new Role();
 	for (int i = 0; i < 7; i++)
 	{
-		roleCard->setRole(roleNames[i],i);
-		roleCard->setId(i + 1);
+		roleCard->setRole(roleNames[i],i+1);
 		roleDeck.push_back(roleCard);
 	}
 

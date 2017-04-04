@@ -40,7 +40,7 @@ class Role : public Card
 		*/
 
     private:
-        Card cCard; //contigency card
+        Card rCard; //roll card
 		string assignedRole;
 };
 #endif

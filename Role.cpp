@@ -2,12 +2,12 @@
 
 Role::Role(string n, int i):Card(n,'r', i)
 {
-    cCard=Card();
+    rCard=Card();
 }
 
 Role::Role():Card("null", 'r', 0)
 {
-    cCard=Card();
+    rCard=Card();
 }
 
 Role::~Role(){}

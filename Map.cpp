@@ -24,8 +24,8 @@ Map::Map(int cityNum) {
 }
 
 Map::~Map() {
-	cities.clear();
-	delete[] adjacencyMatrix;
+	//cities.clear();
+	//delete[] adjacencyMatrix;
 }
 
 City Map::getCity(int i) {

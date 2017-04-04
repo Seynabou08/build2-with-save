@@ -14,6 +14,7 @@ public:
 	//Destructor
 	~EpidemicCard();
 
+	void setEpidemic(int a);
 	void playCard(InfectionDeck& deck); //pass the infection deck
 };
 
