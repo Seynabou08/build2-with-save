@@ -39,10 +39,11 @@ public:
 	char getPawn();
 	int getId();
 	int getLocation();
+	int getHandSize(); //size of hand
 
 	//actions
-	//void move(Map m);
-	void move(int d); //replace this later
+	void move(Map m);
+	//void move(int d); //replace this later
 	void flight(int a);
 	void buildStation(Map m);
 	void treatDisease(Map m);
@@ -53,8 +54,8 @@ public:
 	//automatic mandatory actions
 	void startTurn();
 	void subtractAction();
-	void concludeTurn(vector<Card*> deck);
-	void drawCards(vector<Card*> deck, int num);
+	void concludeTurn(vector<Card*> &deck);
+	void drawCards(vector<Card*> &deck, int num); //Changed so that pointer is passed
 	bool checkAction();
 	void discard(int a);
 

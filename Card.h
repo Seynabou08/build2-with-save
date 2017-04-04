@@ -19,9 +19,11 @@ class Card
         string getName();
         char getColor();
         int getId();
+		string getType();
         void setName(string n);
         void setColor(char c);
         void setId(int i);
+		void setType(string t);
 
         void printCard();
 
@@ -29,6 +31,7 @@ class Card
         string name;
         char color;
         int id;
+		string type;
 
 };
 #endif

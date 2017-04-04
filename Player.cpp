@@ -183,12 +183,12 @@ void Player::subtractAction()
 	actionsLeft--;
 }
 
-void Player::concludeTurn(vector<Card*> deck)
+void Player::concludeTurn(vector<Card*> &deck)
 {
 	this->drawCards(deck, 2);
 }
 
-void Player::drawCards(vector<Card*> deck, int num)
+void Player::drawCards(vector<Card*> &deck, int num)	//Changing so that pointer is passed
 {
 	int userCards = this->cards.size(); //number of cards in user hand
 	int lastCard = deck.size(); //index of last card
@@ -229,44 +229,38 @@ void Player::discard(int a)
 }
 
 ////////PLAYER ACTIONS/////////////////////////////////
-void Player::move(int d)
+void Player::move(Map m)
 {
 	//This method was supposed to make sire the player can only drive to neighbouring cities, we will try to fix the error.
 	//the player can drive anywhere but wont be shown any option but the neighbouring cities.
 
-	/*vector<City*> cities= m.getConnectedCities(this->location);
+	vector<City*> cities = m.getConnectedCities(this->location);
 	vector<int> cityIndex;
-	bool correctInput=false;
-	int choice;
-	cout<<"select the index of the city you would like to drive (or fly) to: "<<endl;
-	for (int i=0; i<cities.size(); i++) //get possible cities player can drive to
+	bool correctInput = false;
+	int choice;  
+	cout << "select the index of the city you would like to drive to: " << endl;
+	for (int i = 0; i < cities.size(); i++) //print possible cities player can drive to
 	{
-	cout<< cities[i]->index << " : " << cities[i]->getName()<<endl;
-	cityIndex.push_back(cities[i]->index);
+		cout << cities[i]->index << " : " << cities[i]->getName() << endl;
+		cityIndex.push_back(cities[i]->index);
 	}
 	cities.clear();
 
-	while(!correctInput) //get player input with verification
+	while (!correctInput) //get player input with verification
 	{
-	cin>>choice;
-	for (int i=0; i<cityIndex.size(); i++)
-	{
-	if(choice==cityIndex[i])
-	correctInput = true;
-	}
-	if(!correctInput)
-	cout<<"sorry, you have entered an invalid index"<<endl;
+		cin >> choice;
+		for (int i = 0; i < cityIndex.size(); i++)
+		{
+			if (choice == cityIndex[i])
+				correctInput = true;
+		}
+		if (!correctInput)
+			cout << "sorry, you have entered an invalid index" << endl;
 	}
 	this->location = choice;
 
 	this->subtractAction();
 
-	*/
-	if (Player::checkAction())
-	{
-		location = d;
-		this->subtractAction();
-	}
 }
 
 void Player::flight(int a)
@@ -414,6 +408,10 @@ void Player::checkPassiveRole()
 
 //this will be commented out until  we fix the issue with saving and loading
 
+int Player::getHandSize() {
+	return this->cards.size();
+}
+
 
 void Player::savePlayer()
 {
@@ -429,7 +427,7 @@ void Player::savePlayer()
 
 		for (int i = 0; i < cards.size(); i++)
 		{
-			myfile << cards[i]->getName() << '-' << cards[i]->getId() << endl;
+			myfile << cards[i]->getType() << '-' << cards[i]->getId() << endl;
 		}
 
 
@@ -553,7 +551,7 @@ void Player::loadPlayer(ifstream myfile, vector<Card*> cc, vector<Card*> rc) {
 
 	}
 
-
+	
 
 	/* void Player::loadPlayer(string fileName)
 	{

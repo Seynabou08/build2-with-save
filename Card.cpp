@@ -30,7 +30,12 @@ int Card::getId()
     return this->id;
 }
 
+string Card::getType()
+{
+	return this->type;
+}
 
+s
 void Card::setName(string n)
 {
 	this->name = n;
@@ -43,6 +48,11 @@ void Card::setColor(char c)
 void Card::setId(int i)
 {
 	this->id = i;
+}
+
+void Card::setType(string t)
+{
+	this->type = t;
 }
 
 void Card::printCard()

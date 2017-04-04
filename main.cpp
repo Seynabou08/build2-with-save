@@ -41,7 +41,7 @@ int main(int argc, char* argv[])
 	cout << "How many players do you want to play?" << endl;
 	int a = 0;
 	int playerNum;
-	while (a >= 4 || a == 0)
+	while (a > 4 || a == 0)
 	{
 		cin >> a;
 	}
@@ -101,7 +101,7 @@ int main(int argc, char* argv[])
 		CityCard* ccard = new CityCard(newMap.cities[i]);
 		Card* card = new Card();
 		card = ccard;
-		card->setName("city card");
+
 		playerDeck.push_back(card);
 	}
 
@@ -131,16 +131,12 @@ int main(int argc, char* argv[])
 	ideck.init(48);
 	ideck.initialInfection();
 
-	for (int i = 0; i < playerNum; i++) {
-		vector<Card*> picks;
 
-		for (int j = 0; j < cardNum; j++) {
-			picks.push_back(playerDeck.back());
-			playerDeck.pop_back();
-		}
+	for (int i = 0; i < playerNum; i++) {
+	
 		Player* player = &players.at(i);
 
-		player->drawCards(picks, cardNum);
+		player->drawCards(playerDeck, cardNum);	//TODO Needs to use pointer so that copy of deck isn't passed
 
 		player->setRole(*roleDeck.back());
 		roleDeck.pop_back();
@@ -182,7 +178,7 @@ int main(int argc, char* argv[])
 					newMap.showCity(players.at(i).getLocation());
 					int city;
 					cin >> city;
-					players.at(i).move(city);
+					players.at(i).move(newMap);
 
 					break;
 				}
@@ -190,9 +186,10 @@ int main(int argc, char* argv[])
 				{
 					players.at(i).displayHand();
 
-					int cardInt;
-
-					cin >> cardInt;
+					int cardInt = 0;
+					while (cardInt == 0 || cardInt >= players.at(i).getHandSize()) {
+						cin >> cardInt;
+					}
 
 					players.at(i).flight(players.at(i).getHand()[cardInt]->getId());
 
@@ -203,14 +200,22 @@ int main(int argc, char* argv[])
 				{
 					players.at(i).displayHand();
 
-					int cardInt;
-
-					cin >> cardInt;
+					int cardInt = 0;
+					while (cardInt == 0 || cardInt >= players.at(i).getHandSize()) {
+						cin >> cardInt;
+					}
 
 					if (players.at(i).getHand()[cardInt]->getId() == players.at(i).getLocation())
 					{
-						players.at(i).flight(players.at(i).getHand()[cardInt]->getId());
 
+						cout << "Choose a city to fly to" << endl;
+						
+						//TODO SHOW ALL CITIES AND IDs
+
+
+						int cityID;
+						cin >> cityID;
+						players.at(i).flight(cityID);
 						players.at(i).discard(cardInt);
 					}
 					break;
@@ -222,7 +227,7 @@ int main(int argc, char* argv[])
 					if (location->researchCenter == true)
 					{
 
-						for (int i = 0; i < 47; i++)
+						for (int j = 0; j < 47; j++)
 						{
 							City* newLoc = newMap.accessCity(i);
 							if (newLoc->researchCenter == true)

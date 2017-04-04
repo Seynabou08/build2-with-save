@@ -23,6 +23,7 @@ public:
 private:
 	int id;
 	City* city; //We associate each card to a city. They share a name and index 
+	
 
 };
 
