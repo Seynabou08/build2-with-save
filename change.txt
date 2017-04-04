@@ -1,20 +1,24 @@
 Player save and load must used switch case (maybe) to turn string to cards.
 
-Must change way deck is saved by saving simply the card ID.
-
-Then use that in load player. (get id then make player draw card with that ID)
-
-
 
 //Getting the Pawn
 			//getline(myfile, lineToBeInputed, ' ');
 			//char line = lineToBeInputed;
 
 
-What cards get in the deck??? I need to know for loading 
-if(s=="city card")
-				
-	{
-					
-		cards.push_back(d.at(j));
-	}
+
+Finish 8 Player actions:
+
+
+Implement event cards:
+airlift, one quiet night, government grant, resislient population, forecast
+
+
+
+Implement role cards
+
+Implement some of the commonly overlooked rules (in pdf)
+
+
+Last: (when everything else is done)
+design patterns
