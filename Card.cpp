@@ -35,7 +35,7 @@ string Card::getType()
 	return this->type;
 }
 
-s
+
 void Card::setName(string n)
 {
 	this->name = n;

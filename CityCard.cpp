@@ -18,7 +18,7 @@ CityCard::CityCard() :Card(){
 CityCard::CityCard(City* city):Card(city->getName(), city->getColor(), city->accessCity()){
 	this->id = city->index;
 	this->city = city;
-	this->setType = "City Card";
+	this->setType("City Card");
 }
 
 int CityCard::getID() {

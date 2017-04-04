@@ -82,7 +82,7 @@ void Player::setRole(Role rCard)
 
 string Player::getRole()
 {
-	return this->role.getName();
+	return this->role.getRole();
 }
 
 char Player::getPawn()
@@ -237,7 +237,7 @@ void Player::move(Map m)
 	vector<City*> cities = m.getConnectedCities(this->location);
 	vector<int> cityIndex;
 	bool correctInput = false;
-	int choice;  
+	int choice;
 	cout << "select the index of the city you would like to drive to: " << endl;
 	for (int i = 0; i < cities.size(); i++) //print possible cities player can drive to
 	{
@@ -423,7 +423,7 @@ void Player::savePlayer()
 
 	if (myfile.is_open()) {
 
-		myfile << this->id << ' ' << this->location << ' ' << this->role.getName() << '-' << this->role.getId()<< ' ' << this->getPawn() << endl;
+		myfile << this->id << ' ' << this->location << ' ' << this->role.getName() << '-' << this->role.getId() << ' ' << this->getPawn() << endl;
 
 		for (int i = 0; i < cards.size(); i++)
 		{
@@ -439,22 +439,6 @@ void Player::savePlayer()
 
 	myfile.close();
 
-
-
-
-	/*
-	string fullPath;
-	stringstream playerId; //set dynamic file name unique to the player
-	playerId << this->id;
-	fullPath.append("PlayerSave");
-	fullPath.append(playerId.str());
-	fullPath.append(".txt");
-
-	ofstream myFile(fullPath.c_str(), ios::binary);
-	boost::archive::text_oarchive oa(myFile);
-	oa << this;
-
-	myFile.close();	*/
 }
 
 
@@ -491,10 +475,10 @@ void Player::loadPlayer(ifstream myfile, vector<Card*> cc, vector<Card*> rc) {
 
 			//Getting the role
 			getline(myfile, lineToBeInputed, '-');
-			string s = lineToBeInputed; 
+			string s = lineToBeInputed;
 			getline(myfile, lineToBeInputed, ' ');
 			int j = stoi(lineToBeInputed);
-			this->role.setRole(s,j);
+			this->role.setRole(s, j);
 
 			//Getting the Pawn
 			//getline(myfile, lineToBeInputed, ' ');
@@ -527,7 +511,7 @@ void Player::loadPlayer(ifstream myfile, vector<Card*> cc, vector<Card*> rc) {
 
 			//Getting the hand
 
-			
+
 
 			//cards[i]->getName() << " " << cards[i]->getId << endl;
 			for (int i = 0; i < cards.size(); i++)
@@ -536,13 +520,13 @@ void Player::loadPlayer(ifstream myfile, vector<Card*> cc, vector<Card*> rc) {
 				string s = lineToBeInputed;
 				getline(myfile, lineToBeInputed, ' ');
 				int j = stoi(lineToBeInputed);
-				if(s=="city card")
+				if (s == "city card")
 				{
 					cards.push_back(cc.at(j));
 				}
 
 
-				
+
 			}
 			myfile.close();
 		}
@@ -551,43 +535,5 @@ void Player::loadPlayer(ifstream myfile, vector<Card*> cc, vector<Card*> rc) {
 
 	}
 
-	
 
-	/* void Player::loadPlayer(string fileName)
-	{
-
-	Player pl;
-	char c;
-	ifstream home(fileName);
-	boost::archive::text_iarchive ia(home);
-	ia >> pl;
-	home.close();
-
-	this->id = pl.getId();
-	this->cards = pl.getHand();
-	this->role = pl.getRole();
-	c= pl.getPawn();
-	switch(p)
-	{
-	case 'b':
-	this->pawn = BLUE;
-	break;
-
-	case 'g':
-	this->pawn = GREEN;
-	break;
-
-	case 'r':
-	this->pawn = RED;
-	break;
-
-	case 'y':
-	this->pawn = YELLOW;
-	break;
-
-	case 'x':
-	this->pawn = BLACK;
-	break;
-
-	}*/
 }

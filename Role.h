@@ -22,6 +22,9 @@ class Role : public Card
 		//Accessor and Mutator methods
        	void setRole(string role, int a);
 
+		string getRole();
+
+
         /* void passiveAbility(char disease, int city);
         void activeAbility(vector<Card> &deck, int city);
 		*/

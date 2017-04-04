@@ -19,6 +19,11 @@ void Role::setRole(string role, int a)
 	this->setId(a);
 }
 
+string Role::getRole()
+{
+	return this->assignedRole;
+}
+
 
 void Role::printRole()
 {

@@ -139,6 +139,7 @@ int main(int argc, char* argv[])
 		player->drawCards(playerDeck, cardNum);	//TODO Needs to use pointer so that copy of deck isn't passed
 
 		player->setRole(*roleDeck.back());
+
 		roleDeck.pop_back();
 	}
 
