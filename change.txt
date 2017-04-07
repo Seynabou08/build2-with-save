@@ -1,4 +1,4 @@
-Player save and load must used switch case (maybe) to turn string to cards.
+Player save and load from ass3 
 
 
 //Getting the Pawn
@@ -11,7 +11,12 @@ Finish 8 Player actions:
 
 
 Implement event cards:
-airlift, one quiet night, government grant, resislient population, forecast
+airlift: move a pawn yours or another player's to any cuty. You must have a player's permission to move their pawn.
+ 
+one quiet night: the next player to begin the playin the indector phase of their turn may skip that phase entirely.
+ government grant: Take a card from the infection discard pile and remove it from the game.
+ resislient population:Add a reserch station to any city for free
+ forecast: Examine the top 6 cards of the infection Draw Pile, rearrange them in the order of your choise then place them back on the pile.
 
 
 
@@ -24,22 +29,3 @@ Last: (when everything else is done)
 design patterns
 
 
-
-
-Case 5:
-if (hasMatchingCard || players.at(i).getRole() == "Operation Expert") {
-
-						City* location = newMap.accessCity(players.at(i).getLocation());
-						location->researchCenter = true;
-
-						players.at(i).treatDisease(newMap);
-
-
-						if (players.at(i).getRole() != "Operation Expert")
-							players.at(i).discard(matchingCardIndex);
-
-						cout << "A research station was built in " << location->getName() << endl;
-					}
-					else {
-						cout << "To build a research station the card matching your location is required" << endl;
-					}

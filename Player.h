@@ -5,6 +5,7 @@
 #include "Role.h"
 #include "CityCard.h"
 #include "ReferenceCard.h"
+#include "EpidemicCard.h"
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -21,7 +22,7 @@ class Player
 public:
 
 	//Constructors and Destructor methods
-	Player(char p, vector<Role> &roleDeck, vector<Card*> &deck, int pCount, int id);
+	Player(Map map, char p, vector<Role> &roleDeck, vector<Card*> &deck, int pCount, int id);
 	Player();
 	~Player();
 
@@ -55,8 +56,8 @@ public:
 	//automatic mandatory actions
 	void startTurn();
 	void subtractAction();
-	void concludeTurn(vector<Card*> &deck);
-	void drawCards(vector<Card*> &deck, int num); //Changed so that pointer is passed
+	void concludeTurn(vector<Card*> &deck, Map map);
+	void drawCards(Map map, vector<Card*> &deck, int num); //Changed so that pointer is passed
 	bool checkAction();
 	void discard(int a);
 
@@ -79,6 +80,7 @@ private:
 	Role role;
 	int actionsLeft;
 	ReferenceCard rc;
+	vector<EpidemicCard*> epCard;
 
 };
 #endif 

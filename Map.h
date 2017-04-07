@@ -1,5 +1,6 @@
 //#include "Player.h"
-#include "City.h" 
+#include "City.h"
+#include "InfectionDeck.h"
 #include <vector>
 
 using namespace std;
@@ -11,9 +12,10 @@ class Map
 private:
 	int size;               //The number of cities in the map
 	bool** adjacencyMatrix; //represents the edges connecting cities
+	
 public:
 	vector<City*> cities;   //need to be public for Infectiondeck()
-
+	InfectionDeck* infectionDeck;
 	// These are initialised as false but then set to true with a cure for a disease is found
 	bool blueCure;
 	bool yellowCure;

@@ -1,22 +1,22 @@
 #include "Player.h"
 
-Player::Player(char p, vector<Role> &roleDeck, vector<Card*> &cardDeck, int pCount, int i)
+Player::Player(Map map, char p, vector<Role> &roleDeck, vector<Card*> &cardDeck, int pCount, int i)
 {
 	this->location = 7; //Atlanta is location 7
 	this->cards = vector<Card*>(20);
 	switch (pCount) //draws cards based on player count
 	{
 	case 1:
-		drawCards(cardDeck, 4);
+		drawCards(map, cardDeck, 4);
 		break;
 	case 2:
-		drawCards(cardDeck, 4);
+		drawCards(map, cardDeck, 4);
 		break;
 	case 3:
-		drawCards(cardDeck, 3);
+		drawCards(map, cardDeck, 3);
 		break;
 	case 4:
-		drawCards(cardDeck, 2);
+		drawCards(map, cardDeck, 2);
 		break;
 	}
 	this->role = roleDeck[roleDeck.size() - 1];
@@ -191,12 +191,12 @@ void Player::subtractAction()
 	actionsLeft--;
 }
 
-void Player::concludeTurn(vector<Card*> &deck)
+void Player::concludeTurn(vector<Card*> &deck, Map map)
 {
-	this->drawCards(deck, 2);
+	this->drawCards(map, deck, 2);
 }
 
-void Player::drawCards(vector<Card*> &deck, int num)	//Changing so that pointer is passed
+void Player::drawCards(Map map, vector<Card*> &deck, int num)	//Changing so that pointer is passed
 {
 	int userCards = this->cards.size(); //number of cards in user hand
 	int lastCard = deck.size(); //index of last card
@@ -209,12 +209,20 @@ void Player::drawCards(vector<Card*> &deck, int num)	//Changing so that pointer 
 	{
 		for (int a = 0; a < num; a++)
 		{
-			this->cards.push_back(deck.back());
-			deck.pop_back();
+			if (deck.back()->getName() == "Epidemic Card")
+			{
+				/*EpidemicCard* epCard;
+				epCard = deck.back();
+				epCard->playCard(map);*/
+			}
+			else
+			{
+				this->cards.push_back(deck.back());
+				deck.pop_back();
+			}
 		}
 	}
 }
-
 
 //  returns true if the user still has actions left this turn.
 
@@ -283,8 +291,9 @@ void Player::flight(int a)
 	this->subtractAction();
 }
 
-void Player::buildStation(Map* m) //should be a pointer or not?
+void Player::buildStation(Map* m)
 {
+
 	bool hasMatchingCard = false;
 	int matchingCardIndex;
 	for (int j = 0; j < getHandSize(); j++) {
@@ -293,30 +302,20 @@ void Player::buildStation(Map* m) //should be a pointer or not?
 			matchingCardIndex = j;
 		}
 	}
-
 	if (hasMatchingCard || (getRole() == "Operation Expert")) {
-		//uses current player location, builds a station
 		if (m->researchStationNum > 0)
 		{
 			City* location = m->accessCity(getLocation());
 			location->setResearchCenter(true);
 
 			cout << "A research station was built in " << location->getName() << endl;
-
 			m->researchStationNum--;
 			this->subtractAction();
 			if (getRole() != "Operation Expert")
 				discard(matchingCardIndex);
 		}
-		else
-		{
-			cout << "Too many research stations" << endl;
-			//no more research stations can be built
-		}
 	}
-	else {
-		cout << "To build a research station the card matching your location is required" << endl;
-	}
+
 }
 
 void Player::treatDisease(Map m)
@@ -347,12 +346,11 @@ void Player::treatDisease(Map m)
 	{
 		//city has no infection to remove
 	}
-	//delete[] cp;
+	delete[] cp;
 }
 
 void Player::shareKnowledge(Player* tg)
-{
-	//TODO CHANGE SO THAT YOU CAN ONLY GIVE THE CARD CORRESPONDING TO THE CITY YOU'RE BOTH IN
+{//TODO CHANGE SO THAT YOU CAN ONLY GIVE THE CARD CORRESPONDING TO THE CITY YOU'RE BOTH IN
 	if (this->checkAction())
 	{
 		char option;
@@ -523,17 +521,6 @@ void Player::discoverCure(Map m)
 	}
 }
 
-void Player::activateAbility(vector<Card> &deck)
-{
-	//activates a player ability based on their role
-}
-
-///////////PASSIVE ROLE ABILITY/////////////////
-void Player::checkPassiveRole()
-{
-	//activates a passive ability based on the Players role. 
-}
-
 //this will be commented out until  we fix the issue with saving and loading
 
 int Player::getHandSize() {
@@ -545,13 +532,13 @@ void Player::savePlayer()
 {
 	cout << "TRYING TO SAVE MAP" << endl;
 	ofstream myfile;
-	int num = this->id;
+	int num = this->id+1;
 	std::string numId = to_string(num);
 	myfile.open("player" + numId + "save.txt");
 
 	if (myfile.is_open()) {
 
-		myfile << this->id << ' ' << this->location << ' ' << this->role.getName() << '-' << this->role.getId() << ' ' << this->getPawn() << endl;
+		myfile << numId << ' ' << this->location << ' ' << this->role.getName() << '-' << this->role.getId() << ' ' << this->getPawn() << endl ;
 
 		for (int i = 0; i < cards.size(); i++)
 		{

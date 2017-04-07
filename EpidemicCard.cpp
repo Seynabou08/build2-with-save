@@ -1,4 +1,5 @@
 #include "EpidemicCard.h"
+#include "Map.h"
 
 
 EpidemicCard::EpidemicCard() :Card(){
@@ -17,16 +18,18 @@ void EpidemicCard::setEpidemic(int a)
 	this->setId(a);
 }
 
-void EpidemicCard::playCard(InfectionDeck& deck)
+void EpidemicCard::playCard(Map map)
 {
 	//Move the infection rate marker forward 1 space on the Infection Rate Track.
 	InfectionDeck::infectionMarker++;
+	InfectionDeck* infDeck = map.infectionDeck;
+
 
 	//draw the bottom card from the infection deck and make outbreak
-	deck.deck.back().makeOutbreak();
+	infDeck->deck.back().makeOutbreak();
 	//move card to discard pile
-	deck.discardPile.push_back(deck.deck.back());
-	deck.deck.pop_back();
+	infDeck->discardPile.push_back(infDeck->deck.back());
+	infDeck->deck.pop_back();
 
-	deck.intensify();
+	infDeck->intensify();
 }

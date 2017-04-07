@@ -20,7 +20,7 @@ Map::Map(int cityNum) {
 	yellowCure = false;
 	whiteCure = false;
 	redCure = false;
-	researchStationNum=6;
+	int researchStationNum=6;
 }
 
 Map::~Map() {

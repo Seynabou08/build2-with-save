@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include "InfectionDeck.h"
+#include "Map.h"
 using namespace std;
 
 class EpidemicCard : public Card {
@@ -15,6 +16,6 @@ public:
 	~EpidemicCard();
 
 	void setEpidemic(int a);
-	void playCard(InfectionDeck& deck); //pass the infection deck
+	void playCard(Map map); //pass the infection deck
 };
 

@@ -12,7 +12,6 @@ int main(int argc, char* argv[])
 {
 	// Initializing the map 
 	Map newMap = Map(48);
-
 	newMap.startGame();
 
 	// Acessing the save from which we load the game
@@ -47,9 +46,6 @@ int main(int argc, char* argv[])
 	while (a > 4 || a == 0)
 	{
 		cin >> a;
-		if (a > 4 || a == 0) {
-			cout << "must choose between 2-4 players" << endl;
-		}
 	}
 
 	switch (a)
@@ -126,6 +122,15 @@ int main(int argc, char* argv[])
 		playerDeck.push_back(eventCard);
 	}
 
+	//Generating epidemic card to add to player deck
+
+	EpidemicCard* epidemicCard = new EpidemicCard();
+	for (int i = 0; i < 5; i++)
+	{
+		epidemicCard->setEpidemic(i);
+		playerDeck.push_back(epidemicCard);
+	}
+
 
 	// GENERATING ROLE DECK
 	vector<Role*> roleDeck;
@@ -157,20 +162,11 @@ int main(int argc, char* argv[])
 
 		Player* player = &players.at(i);
 
-		player->drawCards(playerDeck, cardNum);
+		player->drawCards(newMap,playerDeck, cardNum);
 
 		player->setRole(*roleDeck.back());
 
 		roleDeck.pop_back();
-	}
-
-	//Generating epidemic card to add to player deck
-
-	EpidemicCard* epidemicCard = new EpidemicCard();
-	for (int i = 0; i < 5; i++)
-	{
-		epidemicCard->setEpidemic(i);
-		playerDeck.push_back(epidemicCard);
 	}
 
 
@@ -189,7 +185,8 @@ int main(int argc, char* argv[])
 			while (players.at(i).checkAction())
 			{
 				//Displaying the possible actions the player can make
-				cout << "Player " << i + 1 << " is at " << newMap.cities[players.at(i).getLocation()]->getName() << endl;
+				cout << "Player " << i + 1 << " is at " << newMap.cities[players.at(i).getLocation()]->getName() 
+					<< ". That player is a " << players.at(i).getRole() << "." << endl;
 				cout << "Player " << i + 1 << ": Choose your action..." << endl;
 
 				players.at(i).displayActionsLeft();
@@ -246,6 +243,11 @@ int main(int argc, char* argv[])
 
 					players.at(i).displayHand();
 
+					if (players.at(i).getHandSize() == 0)
+					{
+						cout << "You are out of city cards select another action." << endl;
+						break;
+					}
 					cout << "Which city do you want to move to" << endl;
 
 					int cardInt = -1;
@@ -295,7 +297,7 @@ int main(int argc, char* argv[])
 						players.at(i).discard(matchingCardIndex);
 					}
 					else {
-						cout << "You cannot take a charter flight as you do not have a card matching the city you are currently on" << endl;
+						cout << "You cannot take a charter flight as you do not have a card matching the city you are currently on." << endl;
 					}
 
 					break;
@@ -355,12 +357,6 @@ int main(int argc, char* argv[])
 				case '5': //Building a Research Station
 
 				{
-					/*The Operations Expert may, as an action, either:
-					• build a research station in his current city without
-					discarding (or using) a City card, or
-					• once per turn, move from a research station to any city
-					by discarding any City card.*/
-
 					players.at(i).buildStation(&newMap);
 					break;
 				}
@@ -368,6 +364,7 @@ int main(int argc, char* argv[])
 				case '6':	//Treating a disease
 
 				{
+					City* location = newMap.accessCity(players.at(i).getLocation());
 
 					players.at(i).treatDisease(newMap); //TODO Might have to add disease cubes back to supply
 
@@ -383,13 +380,13 @@ int main(int argc, char* argv[])
 						cin >> a;
 						if (a == i) {
 							cout << "You cannot share knowledge with yourself...try again" << endl;
-							
+
 						}
 						if (a >= players.size()) {
 							cout << "There are only " << players.size() << " players...try again" << endl;
-							
+
 						}
-						
+
 					}
 					Player* buddy = &players.at(a);
 					players.at(i).shareKnowledge(buddy);
@@ -406,14 +403,11 @@ int main(int argc, char* argv[])
 					/*
 					if (players.at(i).getHand()[cardInt]->getType() == "Event Card")
 					players.at(i).displayHand();
-
 					int cardInt = 0;
 					while (cardInt == 0 || cardInt >= players.at(i).getHandSize()) {
 					cin >> cardInt;
 					}
-
 					players.at(i).flight(players.at(i).getHand()[cardInt]->getId());
-
 					players.at(i).discard(cardInt);
 					break;
 					*/
@@ -421,34 +415,51 @@ int main(int argc, char* argv[])
 
 				case '0':
 				{
-					if (players.at(i).getRole() != "Dispatcher")
+					if (players.at(i).getRole() == "Dispatcher")
 					{
-						cout << "You are not a dispatcher you can't do this!";
+						int choice = i;
+						int location;
+						City* newLoc;
+
+						cout << "Which player's pawn do you want to move?" << endl;
+						cin >> choice;
+						while (choice <= 0 || choice > playerNum) cin >> choice;
+
+						cout << "Which city will you move it to ?";
+						for (int k = 0; k < playerNum; k++)
+						{
+							newLoc = newMap.accessCity(players.at(k).getLocation());
+							cout << newLoc->index << " : " << newLoc->getName() << endl;
+						}
+
+						newMap.showCity(players.at(choice).getLocation());
+						players.at(choice).move(newMap);
+
+					}
+
+					if (players.at(i).getRole() == "Operations Expert")
+					{
+						players.at(i).displayHand();
+						cout << "Which city do you want to move to?";
+
+						int cardInt = -1;
+						while (cardInt == -1 || cardInt >= players.at(i).getHandSize()) {
+							cin >> cardInt;
+						}
+
+						players.at(i).flight(players.at(i).getHand()[cardInt]->getId());
+
+						players.at(i).discard(cardInt);
 						break;
 					}
 
-					int choice = i;
-					int location;
-					City* newLoc;
-
-					cout << "Which player's pawn do you want to move?" << endl;
-					cin >> choice;
-					while (choice <= 0 || choice > playerNum) cin >> choice;
-
-					cout << "Which city will you move it to ?";
-					for (int k = 0; k < playerNum; k++)
+					else
 					{
-						newLoc = newMap.accessCity(players.at(k).getLocation());
-						cout << newLoc->index << " : " << newLoc->getName() << endl;
+						cout << "You are neither a dispatcher nor a dispatcher you can't do this!";
+						break;
 					}
 
-
-					newMap.showCity(players.at(choice).getLocation());
-					players.at(choice).move(newMap);
-
 					break;
-
-
 
 				}
 				}
@@ -458,9 +469,9 @@ int main(int argc, char* argv[])
 
 
 			////////////END TURN / DRAW 2 PLAYER CARDS////////////
-			players.at(i).concludeTurn(playerDeck);
+			players.at(i).concludeTurn(playerDeck, newMap);
 
-			//players.at(i).savePlayer();
+			players.at(i).savePlayer();
 			//newMap.saveMap();
 
 
