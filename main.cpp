@@ -162,7 +162,7 @@ int main(int argc, char* argv[])
 
 		Player* player = &players.at(i);
 
-		player->drawCards(playerDeck, cardNum);	//TODO Needs to use pointer so that copy of deck isn't passed
+		player->drawCards(playerDeck, cardNum);
 
 		player->setRole(*roleDeck.back());
 
@@ -205,6 +205,7 @@ int main(int argc, char* argv[])
 				if (players.at(i).getRole() == "Contingency Planner" || players.at(i).getRole() == "Operation Expert")
 					cout << "0. Role" << endl;
 
+
 				char action;
 				cin >> action;
 
@@ -240,7 +241,8 @@ int main(int argc, char* argv[])
 					}
 
 					players.at(i).displayHand();
-					cout << "Which city do you want to move to?";
+
+					cout << "Which city do you want to move to" << endl;
 
 					int cardInt = -1;
 					while (cardInt == -1 || cardInt >= players.at(i).getHandSize()) {
@@ -350,35 +352,12 @@ int main(int argc, char* argv[])
 
 				{
 					/*The Operations Expert may, as an action, either:
+					• build a research station in his current city without
+					discarding (or using) a City card, or
 					• once per turn, move from a research station to any city
 					by discarding any City card.*/
 
-					bool hasMatchingCard = false;
-					int matchingCardIndex;
-					for (int j = 0; j < players.at(i).getHandSize(); j++) {
-						if (players.at(i).getHand()[j]->getId() == players.at(i).getLocation()) {
-							hasMatchingCard = true;
-							matchingCardIndex = j;
-						}
-					}
-
-					if (hasMatchingCard || players.at(i).getRole() == "Operation Expert") {
-
-						City* location = newMap.accessCity(players.at(i).getLocation());
-						location->researchCenter = true;
-
-						players.at(i).treatDisease(newMap);
-
-
-						if (players.at(i).getRole() != "Operation Expert")
-							players.at(i).discard(matchingCardIndex);
-
-						cout << "A research station was built in " << location->getName() << endl;
-					}
-					else {
-						cout << "To build a research station the card matching your location is required" << endl;
-					}
-
+					players.at(i).buildStation(newMap);
 					break;
 				}
 
@@ -395,9 +374,20 @@ int main(int argc, char* argv[])
 				case '7': //Sharing knowledge
 
 				{
-					cout << "With which player do you want to share knowledge?";
-					int a;
-					cin >> a;
+					cout << "With which player do you want to share knowledge?" << endl;
+					int a = i;
+					while (a >= players.size() || a == i) {
+						cin >> a;
+						if (a == i) {
+							cout << "You cannot share knowledge with yourself...try again" << endl;
+							
+						}
+						if (a >= players.size()) {
+							cout << "There are only " << players.size() << " players...try again" << endl;
+							
+						}
+						
+					}
 					Player* buddy = &players.at(a);
 					players.at(i).shareKnowledge(*buddy);
 					break;
@@ -414,6 +404,16 @@ int main(int argc, char* argv[])
 
 						cin >> cardInt1 >> cardInt2 >> cardInt3 >> cardInt4 >> cardInt5;
 
+						if (cardInt1 >= players.at(i).getHandSize() ||
+							cardInt2 >= players.at(i).getHandSize() ||
+							cardInt3 >= players.at(i).getHandSize() ||
+							cardInt4 >= players.at(i).getHandSize() ||
+							cardInt5 >= players.at(i).getHandSize()
+							 ) {
+							cout << "Indexes selected were out of range" << endl;
+							break;
+						}
+
 						bool areSameColor = false;	//check to see if all cities are same color
 						bool areRepeatInput = true; //check to make sure same card wasn't inputted twice
 						if (
@@ -422,7 +422,7 @@ int main(int argc, char* argv[])
 							newMap.accessCity(cardInt1)->getColor() == newMap.accessCity(cardInt4)->getColor() &&
 							newMap.accessCity(cardInt1)->getColor() == newMap.accessCity(cardInt5)->getColor()
 							) {
-							areSameColor = true;;
+							areSameColor = true;
 						}
 						if (
 							cardInt1 != cardInt2 && cardInt1 != cardInt3 && cardInt1 != cardInt4 && cardInt1 != cardInt5
@@ -435,9 +435,17 @@ int main(int argc, char* argv[])
 
 
 						if (areSameColor && !areRepeatInput) {
-							\
-								//TODO CHANGE CURE MARKER
-								players.at(i).treatDisease(newMap); //DO WE CURE ON SAME TURN???
+							if (areSameColor && !areRepeatInput) {
+								char cityColor = newMap.accessCity(cardInt1)->getColor();
+								if (cityColor == 'b')
+									newMap.blueCure = true;
+								else if (cityColor == 'y')
+									newMap.yellowCure = true;
+								else if (cityColor == 'w')
+									newMap.whiteCure = true;
+								else if (cityColor == 'r')
+									newMap.redCure = true;
+							}
 
 							players.at(i).discard(cardInt1);
 							players.at(i).discard(cardInt2);
@@ -477,50 +485,30 @@ int main(int argc, char* argv[])
 
 				case '0':
 				{
-
-					if (players.at(i).getRole() == "Dispatcher")
+					if (players.at(i).getRole() != "Dispatcher")
 					{
-						int choice = i;
-						int location;
-						City* newLoc;
-
-						cout << "Which player's pawn do you want to move?" << endl;
-						cin >> choice;
-						while (choice <= 0 || choice > playerNum) cin >> choice;
-
-						cout << "Which city will you move it to ?";
-						for (int k = 0; k < playerNum; k++)
-						{
-							newLoc = newMap.accessCity(players.at(k).getLocation());
-							cout << newLoc->index << " : " << newLoc->getName() << endl;
-						}
-
-						newMap.showCity(players.at(choice).getLocation());
-						players.at(choice).move(newMap);
-						
-					}
-
-					if (players.at(i).getRole() == "Operations Expert")
-					{
-						players.at(i).displayHand();
-						cout << "Which city do you want to move to?";
-						
-						int cardInt = -1;
-						while (cardInt == -1 || cardInt >= players.at(i).getHandSize()) {
-							cin >> cardInt;
-						}
-
-						players.at(i).flight(players.at(i).getHand()[cardInt]->getId());
-
-						players.at(i).discard(cardInt);
+						cout << "You are not a dispatcher you can't do this!";
 						break;
 					}
 
-					else
+					int choice = i;
+					int location;
+					City* newLoc;
+
+					cout << "Which player's pawn do you want to move?" << endl;
+					cin >> choice;
+					while (choice <= 0 || choice > playerNum) cin >> choice;
+
+					cout << "Which city will you move it to ?";
+					for (int k = 0; k < playerNum; k++)
 					{
-						cout << "You are neither a dispatcher nor a dispatcher you can't do this!";
-						break;
+						newLoc = newMap.accessCity(players.at(k).getLocation());
+						cout << newLoc->index << " : " << newLoc->getName() << endl;
 					}
+
+
+					newMap.showCity(players.at(choice).getLocation());
+					players.at(choice).move(newMap);
 
 					break;
 

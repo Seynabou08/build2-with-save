@@ -285,23 +285,37 @@ void Player::flight(int a)
 
 void Player::buildStation(Map m)
 {
-	//uses current player location, builds a station
-	if (m.researchStationNum > 0)
-	{
-		int loc = this->location;
-		City c;
-		City* cp = m.accessCity(loc); // gets a pointer to city where player is
-		c = *cp;                      //creates a copy that can be modified
-		c.setResearchCenter(true);    // copy modified
-		*cp = c;                      //city replaced with copy
-		delete[] cp;
-
-		m.researchStationNum--;
-		this->subtractAction();
+	bool hasMatchingCard = false;
+	int matchingCardIndex;
+	for (int j = 0; j < getHandSize(); j++) {
+		if (getHand()[j]->getId() == getLocation()) {
+			hasMatchingCard = true;
+			matchingCardIndex = j;
+		}
 	}
-	else
-	{
-		//no more research stations can be built
+
+	if (hasMatchingCard || getRole() == "Operation Expert") {
+		//uses current player location, builds a station
+		if (m.researchStationNum > 0)
+		{
+			City* location = m.accessCity(getLocation());
+			location->setResearchCenter(true);
+
+			cout << "A research station was built in " << location->getName() << endl;
+
+			m.researchStationNum--;
+			this->subtractAction();
+			if (getRole() != "Operation Expert")
+				discard(matchingCardIndex);
+		}
+		else
+		{
+			cout << "Too many research stations" << endl;
+			//no more research stations can be built
+		}
+	}
+	else {
+		cout << "To build a research station the card matching your location is required" << endl;
 	}
 }
 
@@ -333,7 +347,7 @@ void Player::treatDisease(Map m)
 	{
 		//city has no infection to remove
 	}
-	delete[] cp;
+	//delete[] cp;
 }
 
 void Player::shareKnowledge(Player tg)
