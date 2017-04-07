@@ -332,7 +332,7 @@ void Player::treatDisease(Map m)
 	{
 		//city has no infection to remove
 	}
-	delete[] cp;
+	//delete[] cp; //WHY ARE WE DELETING HERE? IT BREAKS SOMETHING LOL
 }
 
 void Player::shareKnowledge(Player tg)

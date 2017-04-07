@@ -296,8 +296,7 @@ int main(int argc, char* argv[])
 					}
 					break;
 				}
-				case '5': //Building a Research Station
-
+				case '5': //Building a Research Station 
 				{
 					bool hasMatchingCard = false;
 					int matchingCardIndex;
@@ -313,10 +312,11 @@ int main(int argc, char* argv[])
 						City* location = newMap.accessCity(players.at(i).getLocation());
 						location->researchCenter = true;
 
-						players.at(i).treatDisease(newMap);
+						players.at(i).treatDisease(newMap); //do we treat disease on the same turn??? (subtracts action if there are cubes)
 
 						players.at(i).discard(matchingCardIndex);
 						cout << "A research station was built in " << location->getName() << endl;
+						players.at(i).subtractAction(); //problematic: can cause 2 actions to be subtracted
 					}
 					else {
 						cout << "To build a research station the card matching your location is required" << endl;
@@ -338,9 +338,17 @@ int main(int argc, char* argv[])
 				case '7': //Sharing knowledge
 
 				{
-					cout << "With which player do you want to share knowledge?";
-					int a;
-					cin >> a;
+					cout << "With which player do you want to share knowledge?" << endl;
+					int a = i;
+					while (a >= players.size() || a == i) {
+						cin >> a;
+						if (a == i) {
+							cout << "You cannot share knowledge with yourself...try again" << endl;
+						}
+						if (a >= players.size()) {
+							cout << "There are only " << players.size() << " players...try again" << endl;
+						}
+					}
 					Player* buddy = &players.at(a);
 					players.at(i).shareKnowledge(*buddy);
 					break;
@@ -357,15 +365,25 @@ int main(int argc, char* argv[])
 
 						cin >> cardInt1 >> cardInt2 >> cardInt3 >> cardInt4 >> cardInt5;
 
+						if (cardInt1 >= players.at(i).getHandSize() ||
+							cardInt2 >= players.at(i).getHandSize() ||
+							cardInt3 >= players.at(i).getHandSize() ||
+							cardInt4 >= players.at(i).getHandSize() ||
+							cardInt5 >= players.at(i).getHandSize()
+							) {
+							cout << "Indexes selected were out of range" << endl;
+							break;
+						}
+
 						bool areSameColor = false;	//check to see if all cities are same color
 						bool areRepeatInput = true; //check to make sure same card wasn't inputted twice
 						if (
-							newMap.accessCity(cardInt1)->getColor == newMap.accessCity(cardInt2)->getColor &&
-							newMap.accessCity(cardInt1)->getColor == newMap.accessCity(cardInt3)->getColor &&
-							newMap.accessCity(cardInt1)->getColor == newMap.accessCity(cardInt4)->getColor &&
-							newMap.accessCity(cardInt1)->getColor == newMap.accessCity(cardInt5)->getColor
+							newMap.accessCity(cardInt1)->getColor() == newMap.accessCity(cardInt2)->getColor() &&
+							newMap.accessCity(cardInt1)->getColor() == newMap.accessCity(cardInt3)->getColor() &&
+							newMap.accessCity(cardInt1)->getColor() == newMap.accessCity(cardInt4)->getColor() &&
+							newMap.accessCity(cardInt1)->getColor() == newMap.accessCity(cardInt5)->getColor()
 							) {
-							areSameColor = true;;
+							areSameColor = true;
 						}
 						if (
 							cardInt1 != cardInt2 && cardInt1 != cardInt3 && cardInt1 != cardInt4 && cardInt1 != cardInt5
@@ -377,8 +395,17 @@ int main(int argc, char* argv[])
 						}
 
 
-						if (areSameColor && !areRepeatInput) {\
-							//TODO CHANGE CURE MARKER
+						if (areSameColor && !areRepeatInput) {
+							char cityColor = newMap.accessCity(cardInt1)->getColor();
+							if (cityColor == 'b')
+								newMap.blueCure = true;
+							else if (cityColor == 'y')
+								newMap.yellowCure = true;
+							else if (cityColor == 'w')
+								newMap.whiteCure = true;
+							else if (cityColor == 'r')
+								newMap.redCure = true;
+
 							players.at(i).treatDisease(newMap); //DO WE CURE ON SAME TURN???
 
 							players.at(i).discard(cardInt1);
