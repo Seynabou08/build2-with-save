@@ -22,3 +22,24 @@ Implement some of the commonly overlooked rules (in pdf)
 
 Last: (when everything else is done)
 design patterns
+
+
+
+
+Case 5:
+if (hasMatchingCard || players.at(i).getRole() == "Operation Expert") {
+
+						City* location = newMap.accessCity(players.at(i).getLocation());
+						location->researchCenter = true;
+
+						players.at(i).treatDisease(newMap);
+
+
+						if (players.at(i).getRole() != "Operation Expert")
+							players.at(i).discard(matchingCardIndex);
+
+						cout << "A research station was built in " << location->getName() << endl;
+					}
+					else {
+						cout << "To build a research station the card matching your location is required" << endl;
+					}

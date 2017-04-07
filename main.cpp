@@ -202,8 +202,8 @@ int main(int argc, char* argv[])
 				cout << "7. Share Knowledge" << endl;
 				cout << "8. Discover a Cure" << endl;
 				cout << "9. Play event card" << endl;
-				if (players.at(i).getRole() == "Contingency Planner")
-					cout << "a. Move any pawn to a city containing another pawn" << endl;
+				if (players.at(i).getRole() == "Contingency Planner" || players.at(i).getRole() == "Operation Expert")
+					cout << "0. Role" << endl;
 
 				char action;
 				cin >> action;
@@ -240,7 +240,7 @@ int main(int argc, char* argv[])
 					}
 
 					players.at(i).displayHand();
-
+					cout << "Which city do you want to move to?";
 
 					int cardInt = -1;
 					while (cardInt == -1 || cardInt >= players.at(i).getHandSize()) {
@@ -350,8 +350,6 @@ int main(int argc, char* argv[])
 
 				{
 					/*The Operations Expert may, as an action, either:
-					• build a research station in his current city without
-					discarding (or using) a City card, or
 					• once per turn, move from a research station to any city
 					by discarding any City card.*/
 
@@ -364,14 +362,17 @@ int main(int argc, char* argv[])
 						}
 					}
 
-					if (hasMatchingCard) {
+					if (hasMatchingCard || players.at(i).getRole() == "Operation Expert") {
 
 						City* location = newMap.accessCity(players.at(i).getLocation());
 						location->researchCenter = true;
 
 						players.at(i).treatDisease(newMap);
 
-						players.at(i).discard(matchingCardIndex);
+
+						if (players.at(i).getRole() != "Operation Expert")
+							players.at(i).discard(matchingCardIndex);
+
 						cout << "A research station was built in " << location->getName() << endl;
 					}
 					else {
@@ -476,30 +477,50 @@ int main(int argc, char* argv[])
 
 				case '0':
 				{
-					if (players.at(i).getRole() != "Dispatcher")
+
+					if (players.at(i).getRole() == "Dispatcher")
 					{
-						cout << "You are not a dispatcher you can't do this!";
+						int choice = i;
+						int location;
+						City* newLoc;
+
+						cout << "Which player's pawn do you want to move?" << endl;
+						cin >> choice;
+						while (choice <= 0 || choice > playerNum) cin >> choice;
+
+						cout << "Which city will you move it to ?";
+						for (int k = 0; k < playerNum; k++)
+						{
+							newLoc = newMap.accessCity(players.at(k).getLocation());
+							cout << newLoc->index << " : " << newLoc->getName() << endl;
+						}
+
+						newMap.showCity(players.at(choice).getLocation());
+						players.at(choice).move(newMap);
+						
+					}
+
+					if (players.at(i).getRole() == "Operations Expert")
+					{
+						players.at(i).displayHand();
+						cout << "Which city do you want to move to?";
+						
+						int cardInt = -1;
+						while (cardInt == -1 || cardInt >= players.at(i).getHandSize()) {
+							cin >> cardInt;
+						}
+
+						players.at(i).flight(players.at(i).getHand()[cardInt]->getId());
+
+						players.at(i).discard(cardInt);
 						break;
 					}
-					
-					int choice = i;
-					int location;
-					City* newLoc;
 
-					cout << "Which player's pawn do you want to move?" << endl;
-					cin >> choice;
-					while (choice <= 0 || choice > playerNum) cin >> choice;
-
-					cout << "Which city will you move it to ?";
-					for (int k = 0; k < playerNum; k++)
+					else
 					{
-						newLoc = newMap.accessCity(players.at(k).getLocation());
-						cout << newLoc->index << " : " << newLoc->getName() << endl;
+						cout << "You are neither a dispatcher nor a dispatcher you can't do this!";
+						break;
 					}
-
-
-					newMap.showCity(players.at(choice).getLocation());
-					players.at(choice).move(newMap);
 
 					break;
 
