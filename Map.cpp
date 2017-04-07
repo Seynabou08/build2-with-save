@@ -16,11 +16,11 @@ Map::Map(int cityNum) {
 		City* city = new City(i);
 		cities.push_back(city);
 	}
-	bool blueCure = false;
-	bool yellowCure = false;
-	bool whiteCure = false;
-	bool redCure = false;
-	int researchStationNum=6;
+	blueCure = false;
+	yellowCure = false;
+	whiteCure = false;
+	redCure = false;
+	researchStationNum=6;
 }
 
 Map::~Map() {

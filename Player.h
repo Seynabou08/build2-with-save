@@ -46,10 +46,10 @@ public:
 	void move(Map m);
 	//void move(int d); //replace this later
 	void flight(int a);
-	void buildStation(Map m);
+	void buildStation(Map* m);
 	void treatDisease(Map m);
 	void shareKnowledge(Player* target);
-	void discoverCure(char diseaseColor);
+	void discoverCure(Map m);
 	void activateAbility(vector<Card> &deck);
 
 	//automatic mandatory actions

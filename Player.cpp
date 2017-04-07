@@ -283,7 +283,7 @@ void Player::flight(int a)
 	this->subtractAction();
 }
 
-void Player::buildStation(Map m)
+void Player::buildStation(Map* m) //should be a pointer or not?
 {
 	bool hasMatchingCard = false;
 	int matchingCardIndex;
@@ -294,16 +294,16 @@ void Player::buildStation(Map m)
 		}
 	}
 
-	if (hasMatchingCard || getRole() == "Operation Expert") {
+	if (hasMatchingCard || (getRole() == "Operation Expert")) {
 		//uses current player location, builds a station
-		if (m.researchStationNum > 0)
+		if (m->researchStationNum > 0)
 		{
-			City* location = m.accessCity(getLocation());
+			City* location = m->accessCity(getLocation());
 			location->setResearchCenter(true);
 
 			cout << "A research station was built in " << location->getName() << endl;
 
-			m.researchStationNum--;
+			m->researchStationNum--;
 			this->subtractAction();
 			if (getRole() != "Operation Expert")
 				discard(matchingCardIndex);
@@ -451,22 +451,75 @@ void Player::shareKnowledge(Player* tg)
 	}
 }
 
-void Player::discoverCure(char diseaseColor)
+void Player::discoverCure(Map m)
 {
-	int count = 0;
-	for (int i = 0; i < (this->cards).size(); i++) //counts number of cards with appropriate disease color
-	{
-		if ((this->cards)[i]->getColor() == diseaseColor)
-			count++;
+	if (m.accessCity(getLocation())->researchCenter) { //check to see if player is at research station
+		displayHandWithColors();
+
+		int cardInt1, cardInt2, cardInt3, cardInt4, cardInt5;
+
+		cout << "Enter the ID of the cards you want to discard: (5 of same color)" << endl;
+
+		cin >> cardInt1 >> cardInt2 >> cardInt3 >> cardInt4 >> cardInt5;
+
+		if (cardInt1 >= getHandSize() ||
+			cardInt2 >= getHandSize() ||
+			cardInt3 >= getHandSize() ||
+			cardInt4 >= getHandSize() ||
+			cardInt5 >= getHandSize()
+			) {
+			cout << "Indexes selected were out of range" << endl;
+			return;
+		}
+
+		bool areSameColor = false;	//check to see if all cities are same color
+		bool areRepeatInput = true; //check to make sure same card wasn't inputted twice
+		if (
+			m.accessCity(cardInt1)->getColor() == m.accessCity(cardInt2)->getColor() &&
+			m.accessCity(cardInt1)->getColor() == m.accessCity(cardInt3)->getColor() &&
+			m.accessCity(cardInt1)->getColor() == m.accessCity(cardInt4)->getColor() &&
+			m.accessCity(cardInt1)->getColor() == m.accessCity(cardInt5)->getColor()
+			) {
+			areSameColor = true;
+		}
+		if (
+			cardInt1 != cardInt2 && cardInt1 != cardInt3 && cardInt1 != cardInt4 && cardInt1 != cardInt5
+			&& cardInt2 != cardInt3 && cardInt2 != cardInt4 && cardInt2 != cardInt5
+			&& cardInt3 != cardInt4 && cardInt3 != cardInt5
+			&& cardInt4 != cardInt5
+			) {
+			areRepeatInput = false;
+		}
+
+
+		if (areSameColor && !areRepeatInput) {
+			if (areSameColor && !areRepeatInput) {
+				char cityColor = m.accessCity(cardInt1)->getColor();
+				if (cityColor == 'b')
+					m.blueCure = true;
+				else if (cityColor == 'y')
+					m.yellowCure = true;
+				else if (cityColor == 'w')
+					m.whiteCure = true;
+				else if (cityColor == 'r')
+					m.redCure = true;
+			}
+
+			discard(cardInt1);
+			discard(cardInt2);
+			discard(cardInt3);
+			discard(cardInt4);
+			discard(cardInt5);
+		}
+		else if (areRepeatInput) {
+			cout << "You inputted the same index more than once..." << endl;
+		}
+		else if (!areSameColor) {
+			cout << "You must input 5 cards of the same color" << endl;
+		}
 	}
-	if (count > 4)
-	{
-		//disease cured
-		this->subtractAction();
-	}
-	else
-	{
-		cout << "not enough cards to cure that disease" << endl;
+	else {
+		cout << "You must be at a research station to discover a cure" << endl;
 	}
 }
 

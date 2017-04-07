@@ -10,8 +10,9 @@ using namespace std;
 
 int main(int argc, char* argv[])
 {
-	// Initialiing the map 
+	// Initializing the map 
 	Map newMap = Map(48);
+
 	newMap.startGame();
 
 	// Acessing the save from which we load the game
@@ -360,7 +361,7 @@ int main(int argc, char* argv[])
 					• once per turn, move from a research station to any city
 					by discarding any City card.*/
 
-					players.at(i).buildStation(newMap);
+					players.at(i).buildStation(&newMap);
 					break;
 				}
 
@@ -397,74 +398,7 @@ int main(int argc, char* argv[])
 
 				case '8'://Discover a Cure
 				{
-					if (newMap.accessCity(players.at(i).getLocation())->researchCenter) { //check to see if player is at research station
-						players.at(i).displayHandWithColors();
-
-						int cardInt1, cardInt2, cardInt3, cardInt4, cardInt5;
-
-						cout << "Enter the ID of the cards you want to discard: (5 of same color)" << endl;
-
-						cin >> cardInt1 >> cardInt2 >> cardInt3 >> cardInt4 >> cardInt5;
-
-						if (cardInt1 >= players.at(i).getHandSize() ||
-							cardInt2 >= players.at(i).getHandSize() ||
-							cardInt3 >= players.at(i).getHandSize() ||
-							cardInt4 >= players.at(i).getHandSize() ||
-							cardInt5 >= players.at(i).getHandSize()
-							 ) {
-							cout << "Indexes selected were out of range" << endl;
-							break;
-						}
-
-						bool areSameColor = false;	//check to see if all cities are same color
-						bool areRepeatInput = true; //check to make sure same card wasn't inputted twice
-						if (
-							newMap.accessCity(cardInt1)->getColor() == newMap.accessCity(cardInt2)->getColor() &&
-							newMap.accessCity(cardInt1)->getColor() == newMap.accessCity(cardInt3)->getColor() &&
-							newMap.accessCity(cardInt1)->getColor() == newMap.accessCity(cardInt4)->getColor() &&
-							newMap.accessCity(cardInt1)->getColor() == newMap.accessCity(cardInt5)->getColor()
-							) {
-							areSameColor = true;
-						}
-						if (
-							cardInt1 != cardInt2 && cardInt1 != cardInt3 && cardInt1 != cardInt4 && cardInt1 != cardInt5
-							&& cardInt2 != cardInt3 && cardInt2 != cardInt4 && cardInt2 != cardInt5
-							&& cardInt3 != cardInt4 && cardInt3 != cardInt5
-							&& cardInt4 != cardInt5
-							) {
-							areRepeatInput = false;
-						}
-
-
-						if (areSameColor && !areRepeatInput) {
-							if (areSameColor && !areRepeatInput) {
-								char cityColor = newMap.accessCity(cardInt1)->getColor();
-								if (cityColor == 'b')
-									newMap.blueCure = true;
-								else if (cityColor == 'y')
-									newMap.yellowCure = true;
-								else if (cityColor == 'w')
-									newMap.whiteCure = true;
-								else if (cityColor == 'r')
-									newMap.redCure = true;
-							}
-
-							players.at(i).discard(cardInt1);
-							players.at(i).discard(cardInt2);
-							players.at(i).discard(cardInt3);
-							players.at(i).discard(cardInt4);
-							players.at(i).discard(cardInt5);
-						}
-						else if (areRepeatInput) {
-							cout << "You inputted the same index more than once..." << endl;
-						}
-						else if (!areSameColor) {
-							cout << "You must input 5 cards of the same color" << endl;
-						}
-					}
-					else {
-						cout << "You must be at a research station to discover a cure" << endl;
-					}
+					players.at(i).discoverCure(newMap);
 					break;
 				}
 				case '9':	//event cards
