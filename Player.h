@@ -29,6 +29,7 @@ public:
 	void printPossessions();
 	void printReference();
 	void displayHand();
+	void displayHandWithColors();
 	void displayActionsLeft();
 
 	//Accessor and Mutator methods
