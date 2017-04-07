@@ -163,6 +163,14 @@ void Player::displayHand()
 	}
 }
 
+void Player::displayHandWithColors()
+{
+	for (int i = 0; i < cards.size(); i++)
+	{
+		cout << "Card at index " << i << ": " << cards[i]->getName() << " (" << cards[i]->getColor() << ")" << endl;
+	}
+}
+
 void Player::printReference()
 {
 	this->rc.displayCard();

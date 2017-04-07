@@ -173,7 +173,7 @@ int main(int argc, char* argv[])
 	
 	bool gameover = false;
 
-	// This loop ensures that each player gets a turn one after te other followed by inection turns
+	// This loop ensures that each player gets a turn one after te other followed by infection turns
 	while (!gameover) {   //If gameover is true we will exit the loop and that ends the game
 
 		for (int i = 0; i < playerNum; i++) {
@@ -187,6 +187,8 @@ int main(int argc, char* argv[])
 
 				players.at(i).displayActionsLeft();
 
+				//PLAYER ACTIONS
+				//TODO REMOVE ABILIY TO MOVE/FLY TO EPIDEMIC CARDS
 				cout << "1. Drive/Ferry" << endl;
 				cout << "2. Direct Flight" << endl;
 				cout << "3. Charter Flight" << endl;
@@ -224,31 +226,40 @@ int main(int argc, char* argv[])
 				}
 				case '3':	//Charter Flight: Discard the City card that matches the city you are in to move to any city.
 				{
-					players.at(i).displayHand();
-
-					int cardInt = -1;
-					while (cardInt == -1 || cardInt >= players.at(i).getHandSize()) {
-						cin >> cardInt;
+					//check for matching card
+					bool hasMatchingCard = false;
+					int matchingCardIndex;
+					for (int j = 0; j < players.at(i).getHandSize(); j++) {
+						if (players.at(i).getHand()[j]->getId() == players.at(i).getLocation()) {
+							hasMatchingCard = true;
+							matchingCardIndex = j;
+						}
 					}
 
-					if (players.at(i).getHand()[cardInt]->getId() == players.at(i).getLocation())
-					{
+					if (hasMatchingCard) {
+
+						//SHOW ALL CITIES AND IDs
+						for (int k = 0; k < newMap.cities.size(); k++) {
+							cout << "(" << k << ") " << newMap.cities[k]->getName() << endl;
+						}
 
 						cout << "Choose a city to fly to" << endl;
-						
-						//TODO SHOW ALL CITIES AND IDs
-
 
 						int cityID;
 						cin >> cityID;
 						players.at(i).flight(cityID);
-						players.at(i).discard(cardInt);
+						players.at(i).discard(matchingCardIndex);
 					}
+					else {
+						cout << "You cannot take a charter flight as you do not have a card matching the city you are currently on" << endl;
+					}
+
 					break;
 				}
 				case '4': //Shuttle Flight	Move from a city with a research station to any other city that has a research station.
 				{
 					City* location = newMap.accessCity(players.at(i).getLocation());
+					vector<int> validCities; //indexes of cities with research stations
 
 					if (location->researchCenter == true)
 					{
@@ -258,35 +269,60 @@ int main(int argc, char* argv[])
 							City* newLoc = newMap.accessCity(i);
 							if (newLoc->researchCenter == true)
 							{
-								cout << newLoc->accessCity() << newLoc->getName();
+								cout << newLoc->accessCity() << " : " << newLoc->getName();
+								validCities.push_back(newLoc->accessCity());
 							}
 						}
-						int newLocation;
-						cout << "Enter the ID of the city you want to move to:" << endl;
-						cin >> newLocation;
 
-						players.at(i).flight(players.at(i).getHand()[newLocation]->getId());
+						bool isValidCity = false;
 
+						while (!isValidCity) {
+							int newLocation;
+							cout << "Enter the ID of the city you want to move to:" << endl;
+							cin >> newLocation;
+
+							//verify if valid city
+							for (int k = 0; k < validCities.size(); k++) {
+								if (newLocation == validCities[k]) {
+									isValidCity = true;
+								}
+							}
+
+							if (isValidCity) {
+								players.at(i).flight(newLocation);
+								break;
+							}
+						}
 					}
 					break;
 				}
 				case '5': //Building a Research Station
 
 				{
-					players.at(i).displayHand();
+					bool hasMatchingCard = false;
+					int matchingCardIndex;
+					for (int j = 0; j < players.at(i).getHandSize(); j++) {
+						if (players.at(i).getHand()[j]->getId() == players.at(i).getLocation()) {
+							hasMatchingCard = true;
+							matchingCardIndex = j;
+						}
+					}
 
-					int cardInt;
+					if (hasMatchingCard) {
 
-					cin >> cardInt;
+						City* location = newMap.accessCity(players.at(i).getLocation());
+						location->researchCenter = true;
 
-					City* location = newMap.accessCity(players.at(i).getLocation());
+						players.at(i).treatDisease(newMap);
 
-					players.at(i).treatDisease(newMap);
-
-					players.at(i).discard(cardInt);
+						players.at(i).discard(matchingCardIndex);
+						cout << "A research station was built in " << location->getName() << endl;
+					}
+					else {
+						cout << "To build a research station the card matching your location is required" << endl;
+					}
 
 					break;
-
 				}
 
 				case '6':	//Treating a disease
@@ -294,7 +330,7 @@ int main(int argc, char* argv[])
 				{
 					City* location = newMap.accessCity(players.at(i).getLocation());
 
-					players.at(i).treatDisease(newMap);
+					players.at(i).treatDisease(newMap); //TODO Might have to add disease cubes back to supply
 
 					break;
 				}
@@ -312,26 +348,58 @@ int main(int argc, char* argv[])
 
 				case '8'://Discover a Cure
 				{
+					if (newMap.accessCity(players.at(i).getLocation())->researchCenter) { //check to see if player is at research station
+						players.at(i).displayHandWithColors();
 
-					players.at(i).displayHand();
+						int cardInt1, cardInt2, cardInt3, cardInt4, cardInt5;
 
-					int cardInt1, cardInt2, cardInt3, cardInt4, cardInt5;
+						cout << "Enter the ID of the cards you want to discard: (5 of same color)" << endl;
 
-					cout << "Enter the ID of the cards you want to discard:" << endl;
+						cin >> cardInt1 >> cardInt2 >> cardInt3 >> cardInt4 >> cardInt5;
 
-					cin >> cardInt1 >> cardInt2 >> cardInt3 >> cardInt4 >> cardInt5;
+						bool areSameColor = false;	//check to see if all cities are same color
+						bool areRepeatInput = true; //check to make sure same card wasn't inputted twice
+						if (
+							newMap.accessCity(cardInt1)->getColor == newMap.accessCity(cardInt2)->getColor &&
+							newMap.accessCity(cardInt1)->getColor == newMap.accessCity(cardInt3)->getColor &&
+							newMap.accessCity(cardInt1)->getColor == newMap.accessCity(cardInt4)->getColor &&
+							newMap.accessCity(cardInt1)->getColor == newMap.accessCity(cardInt5)->getColor
+							) {
+							areSameColor = true;;
+						}
+						if (
+							cardInt1 != cardInt2 && cardInt1 != cardInt3 && cardInt1 != cardInt4 && cardInt1 != cardInt5
+							&& cardInt2 != cardInt3 && cardInt2 != cardInt4 && cardInt2 != cardInt5
+							&& cardInt3 != cardInt4 && cardInt3 != cardInt5
+							&& cardInt4 != cardInt5
+							) {
+							areRepeatInput = false;
+						}
 
-					players.at(i).treatDisease(newMap);
 
-					players.at(i).discard(cardInt1);
-					players.at(i).discard(cardInt2);
-					players.at(i).discard(cardInt3);
-					players.at(i).discard(cardInt4);
-					players.at(i).discard(cardInt5);
+						if (areSameColor && !areRepeatInput) {\
+							//TODO CHANGE CURE MARKER
+							players.at(i).treatDisease(newMap); //DO WE CURE ON SAME TURN???
 
+							players.at(i).discard(cardInt1);
+							players.at(i).discard(cardInt2);
+							players.at(i).discard(cardInt3);
+							players.at(i).discard(cardInt4);
+							players.at(i).discard(cardInt5);
+						}
+						else if (areRepeatInput) {
+							cout << "You inputted the same index more than once..." << endl;
+						}
+						else if (!areSameColor) {
+							cout << "You must input 5 cards of the same color" << endl;
+						}
+					}
+					else {
+						cout << "You must be at a research station to discover a cure" << endl;
+					}
 					break;
 				}
-				case '9':	//evetn cards
+				case '9':	//event cards
 				{
 					/*
 					if (players.at(i).getHand()[cardInt]->getType() == "Event Card")

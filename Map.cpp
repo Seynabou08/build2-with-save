@@ -24,7 +24,7 @@ Map::Map(int cityNum) {
 }
 
 Map::~Map() {
-	//cities.clear();
+	//cities.clear(); //COMMENTED OUT BECAUSE DESTRUCTOR IS AUTO-CALLED IN MIDDLE OF PROGRAM AND BREAKS EVERYTHING
 	//delete[] adjacencyMatrix;
 }
 
@@ -89,7 +89,7 @@ void Map::startGame() {
 	string cityName[] = { "San Francisco", "Los Angeles", "Chicago", "Mexico City", "Lima","Santiago", "Toronto", "Atlanta",
 		"Miami", "Bogota", "New York", "Washington", "Sao Paulo", "Buenos Aires", "London", "Paris", "Madrid",
 		"Lagos", "Kinshasa", "Essen", "Milan", "Algiers", "Khartoum", "Johannesburg", "St Petersburg", "Istanbul",
-		"Cairo", "Moscow", "Baghdad", "Riyadh", "Tehran", "Karachi", "Delhi", "Mumbai", "Kolkata", "Chennai", "beijing",
+		"Cairo", "Moscow", "Baghdad", "Riyadh", "Tehran", "Karachi", "Delhi", "Mumbai", "Kolkata", "Chennai", "Beijing",
 		"Seoul", "Shanghai", "Hong Kong", "Bangkok", "Tokyo", "Osaka", "Taipei", "Manila", "Ho Chi Minh City",
 		"Jakarta", "Sydney" };
 
