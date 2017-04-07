@@ -350,27 +350,79 @@ void Player::treatDisease(Map m)
 	//delete[] cp;
 }
 
-void Player::shareKnowledge(Player tg)
+void Player::shareKnowledge(Player* tg)
 {
+	//TODO CHANGE SO THAT YOU CAN ONLY GIVE THE CARD CORRESPONDING TO THE CITY YOU'RE BOTH IN
 	if (this->checkAction())
 	{
 		char option;
 		int index;
 		vector<Card*> newHand;
-		if (this->location == tg.getLocation())
+
+		if (this->location == tg->getLocation()) {
+			cout << "Press 't' to take a card, and 'g' to give one" << endl;
+			cin >> option;
+			if (option == 't')
+			{
+				int cardIndex = -1; //the card index of the card matching the city in tg's hand
+				for (int i = 0; i < tg->getHandSize(); i++) {
+					if (tg->getHand()[i]->getId() == this->location) {
+						cardIndex = i;
+					}
+				}
+				if (cardIndex == -1) {
+					cout << "The other player does not have the card for the city" << endl;
+				}
+				else {
+					//take card
+					(this->cards).push_back(tg->getHand()[cardIndex]);   //adds card to hand of this player
+					newHand = tg->getHand();                           //creates new hand for tg
+					newHand.erase(newHand.begin() + cardIndex);         //removes card from new hand
+					tg->setHand(newHand);                            //replaces old hand of tg
+					this->subtractAction();
+				}
+			}
+			else if (option == 'g')
+			{
+				int cardIndex = -1; //the card index of the card matching the city in tg's hand
+				for (int i = 0; i < this->getHandSize(); i++) {
+					if (this->getHand()[i]->getId() == this->location) {
+						cardIndex = i;
+					}
+				}
+				if (cardIndex == -1) {
+					cout << "You do not have the card for the city" << endl;
+				}
+				else {
+					//give card
+					newHand = tg->getHand();                             //similar logic
+					newHand.push_back((this->getHand())[cardIndex]);
+					tg->setHand(newHand);
+					(this->cards).erase((this->cards).begin() + cardIndex);
+					this->subtractAction();
+				}
+			}
+			else
+			{
+				cout << "Invalid Option. Try again." << endl;
+			}
+		}
+
+		//Researcher specific action
+		if (this->location == tg->getLocation() && (this->getRole() == "Researcher" || tg->getRole() == "Researcher"))
 		{
 			cout << "Press 't' to take a card, and 'g' to give one" << endl;
 			cin >> option;
 			if (option == 't')
 			{
-				cout << "Player" << tg.getId() << "s hand: " << endl;
-				tg.displayHand();
+				cout << "Player " << tg->getId() << "s hand: " << endl;
+				tg->displayHand();
 				cout << "Enter the index you want to take the card from" << endl;
 				cin >> index;
-				(this->cards).push_back(tg.getHand()[index]);   //adds card to hand of this player
-				newHand = tg.getHand();                           //creates new hand for tg
+				(this->cards).push_back(tg->getHand()[index]);   //adds card to hand of this player
+				newHand = tg->getHand();                           //creates new hand for tg
 				newHand.erase(newHand.begin() + index);         //removes card from new hand
-				tg.setHand(newHand);                            //replaces old hand of tg
+				tg->setHand(newHand);                            //replaces old hand of tg
 				this->subtractAction();
 			}
 			else if (option == 'g')
@@ -379,9 +431,9 @@ void Player::shareKnowledge(Player tg)
 				this->displayHand();
 				cout << "Enter the index you want to take the card from" << endl;
 				cin >> index;
-				newHand = tg.getHand();                             //similar logic
+				newHand = tg->getHand();                             //similar logic
 				newHand.push_back((this->getHand())[index]);
-				tg.setHand(newHand);
+				tg->setHand(newHand);
 				(this->cards).erase((this->cards).begin() + index);
 				this->subtractAction();
 			}
@@ -389,12 +441,12 @@ void Player::shareKnowledge(Player tg)
 			{
 				cout << "Invalid Option. Try again." << endl;
 			}
-			cout << "Player" << this->id << " select the card you want " << endl;
+			//cout << "Player" << this->id << " select the card you want " << endl;
 		}
 
-		else
+		else if (this->location != tg->getLocation())
 		{
-			cout << "sorry, this player is not on this space" << endl;
+			cout << "Sorry, this player is not on this space" << endl;
 		}
 	}
 }

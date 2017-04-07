@@ -48,7 +48,7 @@ public:
 	void flight(int a);
 	void buildStation(Map m);
 	void treatDisease(Map m);
-	void shareKnowledge(Player target);
+	void shareKnowledge(Player* target);
 	void discoverCure(char diseaseColor);
 	void activateAbility(vector<Card> &deck);
 

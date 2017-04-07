@@ -46,6 +46,9 @@ int main(int argc, char* argv[])
 	while (a > 4 || a == 0)
 	{
 		cin >> a;
+		if (a > 4 || a == 0) {
+			cout << "must choose between 2-4 players" << endl;
+		}
 	}
 
 	switch (a)
@@ -122,15 +125,6 @@ int main(int argc, char* argv[])
 		playerDeck.push_back(eventCard);
 	}
 
-	//Generating epidemic card to add to player deck
-
-	EpidemicCard* epidemicCard = new EpidemicCard();
-	for (int i = 0; i < 5; i++)
-	{
-		epidemicCard->setEpidemic(i);
-		playerDeck.push_back(epidemicCard);
-	}
-
 
 	// GENERATING ROLE DECK
 	vector<Role*> roleDeck;
@@ -167,6 +161,15 @@ int main(int argc, char* argv[])
 		player->setRole(*roleDeck.back());
 
 		roleDeck.pop_back();
+	}
+
+	//Generating epidemic card to add to player deck
+
+	EpidemicCard* epidemicCard = new EpidemicCard();
+	for (int i = 0; i < 5; i++)
+	{
+		epidemicCard->setEpidemic(i);
+		playerDeck.push_back(epidemicCard);
 	}
 
 
@@ -364,7 +367,6 @@ int main(int argc, char* argv[])
 				case '6':	//Treating a disease
 
 				{
-					City* location = newMap.accessCity(players.at(i).getLocation());
 
 					players.at(i).treatDisease(newMap); //TODO Might have to add disease cubes back to supply
 
@@ -389,7 +391,7 @@ int main(int argc, char* argv[])
 						
 					}
 					Player* buddy = &players.at(a);
-					players.at(i).shareKnowledge(*buddy);
+					players.at(i).shareKnowledge(buddy);
 					break;
 				}
 
