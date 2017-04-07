@@ -246,10 +246,10 @@ void Player::move(Map m)
 	vector<int> cityIndex;
 	bool correctInput = false;
 	int choice;
-	cout << "select the index of the city you would like to drive to: " << endl;
+	cout << "Select the index of the city you would like to drive to: " << endl;
 	for (int i = 0; i < cities.size(); i++) //print possible cities player can drive to
 	{
-		cout << cities[i]->index << " : " << cities[i]->getName() << endl;
+		//cout << cities[i]->index << " : " << cities[i]->getName() << endl;
 		cityIndex.push_back(cities[i]->index);
 	}
 	cities.clear();
@@ -268,6 +268,7 @@ void Player::move(Map m)
 	this->location = choice;
 
 	this->subtractAction();
+
 
 }
 
@@ -332,7 +333,7 @@ void Player::treatDisease(Map m)
 	{
 		//city has no infection to remove
 	}
-	//delete[] cp; //WHY ARE WE DELETING HERE? IT BREAKS SOMETHING LOL
+	delete[] cp;
 }
 
 void Player::shareKnowledge(Player tg)

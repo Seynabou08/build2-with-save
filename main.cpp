@@ -21,7 +21,7 @@ int main(int argc, char* argv[])
 
 
 	//saving the file in visual studio folder
-	newMap.saveMap(); 
+	newMap.saveMap();
 
 	//displaying the map
 	newMap.showMap();
@@ -32,14 +32,14 @@ int main(int argc, char* argv[])
 
 	City atlanta = newMap.getCity(7);
 	atlanta.setResearchCenter(true);
-	
+
 
 	//Placing the 4 cure markers, side	up near the discovered cure indicators.
 	cout << "CURES: " << newMap.blueCure << ", " << newMap.yellowCure << ", " << newMap.whiteCure << ", " << newMap.redCure << endl;
 
 
 
-	
+
 	cout << "How many players do you want to play?" << endl;
 	int a = 0;
 	int playerNum;
@@ -62,11 +62,11 @@ int main(int argc, char* argv[])
 		cout << "you have selected 4" << endl;
 		playerNum = 4;
 		break;
-	}	
+	}
 
 	vector<Player> players;
 	int cardNum;
-		
+
 	if (playerNum == 2) {
 		cardNum = 4;
 		Player player1 = Player();
@@ -96,10 +96,10 @@ int main(int argc, char* argv[])
 		players.push_back(player4);
 	}
 
-	// Setting up the player deck
+	// Setting up the player deck and the player discard pile
 	vector<Card*> playerDeck;
-	
-		
+
+
 	for (int i = 0; i < newMap.cities.size(); i++) {
 		CityCard* ccard = new CityCard(newMap.cities[i]);
 		Card* card = new Card();
@@ -108,9 +108,12 @@ int main(int argc, char* argv[])
 		playerDeck.push_back(card);
 	}
 
+	//We need a discard Pile of event card that the contengency planner can pick from.
+	vector<Card*> discardPile;
+
 	//Generating event card to add to player deck
 	string eventNames[] = { "Airlift", "One Quiet Night", "Resilient population",
-		"Government Grant", "Forcast"};
+		"Government Grant", "Forcast" };
 
 	EventCard* eventCard = new EventCard();
 	for (int i = 0; i < 5; i++)
@@ -120,25 +123,25 @@ int main(int argc, char* argv[])
 	}
 
 	//Generating epidemic card to add to player deck
-	
+
 	EpidemicCard* epidemicCard = new EpidemicCard();
 	for (int i = 0; i < 5; i++)
 	{
 		epidemicCard->setEpidemic(i);
 		playerDeck.push_back(epidemicCard);
 	}
-	
+
 
 	// GENERATING ROLE DECK
 	vector<Role*> roleDeck;
 
-	string roleNames[] = { "Contingency Planner","Dispatcher", "Medic",
+	string roleNames[] = { "Contingency Planner", "Dispatcher", "Medic",
 		"Operation Expert", "Quarantine Specialist", "Researcher", "Scientist" };
-	
+
 	Role* roleCard = new Role();
 	for (int i = 0; i < 7; i++)
 	{
-		roleCard->setRole(roleNames[i],i+1);
+		roleCard->setRole(roleNames[i], i + 1);
 		roleDeck.push_back(roleCard);
 	}
 
@@ -147,16 +150,16 @@ int main(int argc, char* argv[])
 	random_shuffle(playerDeck.begin(), playerDeck.end());
 	random_shuffle(roleDeck.begin(), roleDeck.end());
 
-	
+
 	//Infection deck initialization
-	cout << "INITIALIZING DECK" << endl;
+	cout << "INITIALIZING INFECTION DECK" << endl;
 	InfectionDeck ideck = InfectionDeck(newMap.cities);
 	ideck.init(48);
 	ideck.initialInfection();
 
 
 	for (int i = 0; i < playerNum; i++) {
-	
+
 		Player* player = &players.at(i);
 
 		player->drawCards(playerDeck, cardNum);	//TODO Needs to use pointer so that copy of deck isn't passed
@@ -166,11 +169,11 @@ int main(int argc, char* argv[])
 		roleDeck.pop_back();
 	}
 
-	
+
 	//Displaying player locations
-	for(int i=0; i<playerNum; i++) cout << "Player " << i+1 << " at" << newMap.cities[players.at(i).getLocation()]->getName() << endl;
-	
-	
+	for (int i = 0; i < playerNum; i++) cout << "Player " << i + 1 << " is at " << newMap.cities[players.at(i).getLocation()]->getName() << endl;
+
+
 	bool gameover = false;
 
 	// This loop ensures that each player gets a turn one after te other followed by infection turns
@@ -178,12 +181,12 @@ int main(int argc, char* argv[])
 
 		for (int i = 0; i < playerNum; i++) {
 			players.at(i).startTurn();
-			cout << "------------------PLAYER "<< i+1 <<" TURN------------------" << endl;
+			cout << "------------------PLAYER " << i + 1 << " TURN------------------" << endl;
 			while (players.at(i).checkAction())
 			{
 				//Displaying the possible actions the player can make
-				cout << "Player " << i+1 <<" is at " << newMap.cities[players.at(i).getLocation()]->getName() << endl;
-				cout << "Player " << i+1 << ": Choose your action..." << endl;
+				cout << "Player " << i + 1 << " is at " << newMap.cities[players.at(i).getLocation()]->getName() << endl;
+				cout << "Player " << i + 1 << ": Choose your action..." << endl;
 
 				players.at(i).displayActionsLeft();
 
@@ -205,32 +208,64 @@ int main(int argc, char* argv[])
 				switch (action) {
 				case '1':	//Drive/Ferry
 				{
-					newMap.showCity(players.at(i).getLocation());
-					players.at(i).move(newMap);
+					int choice = i;
+
+					if (players.at(i).getRole() == "Contingency Planner")
+					{
+						cout << "Which player's pawn do you want to move?";
+						cin >> choice;
+						while (choice <= 0 || choice > playerNum) cin >> choice;
+
+					}
+
+					newMap.showCity(players.at(choice).getLocation());
+					players.at(choice).move(newMap);
 
 					break;
 				}
 				case '2':	//Direct Flight: Discard a City card to move to the city named on the card.
 				{
+
+					int choice = i;
+
+					if (players.at(i).getRole() == "Contingency Planner")
+					{
+						cout << "Which player's pawn do you want to move?";
+						cin >> choice;
+						while (choice <= 0 || choice > playerNum) cin >> choice;
+
+					}
+
 					players.at(i).displayHand();
+
 
 					int cardInt = -1;
 					while (cardInt == -1 || cardInt >= players.at(i).getHandSize()) {
 						cin >> cardInt;
 					}
 
-					players.at(i).flight(players.at(i).getHand()[cardInt]->getId());
+					players.at(choice).flight(players.at(i).getHand()[cardInt]->getId());
 
 					players.at(i).discard(cardInt);
 					break;
 				}
 				case '3':	//Charter Flight: Discard the City card that matches the city you are in to move to any city.
 				{
+					int choice = i;
+
+					if (players.at(i).getRole() == "Contingency Planner")
+					{
+						cout << "Which player's pawn do you want to move?";
+						cin >> choice;
+						while (choice <= 0 || choice > playerNum) cin >> choice;
+
+					}
+
 					//check for matching card
 					bool hasMatchingCard = false;
 					int matchingCardIndex;
 					for (int j = 0; j < players.at(i).getHandSize(); j++) {
-						if (players.at(i).getHand()[j]->getId() == players.at(i).getLocation()) {
+						if (players.at(i).getHand()[j]->getId() == players.at(choice).getLocation()) {
 							hasMatchingCard = true;
 							matchingCardIndex = j;
 						}
@@ -247,7 +282,7 @@ int main(int argc, char* argv[])
 
 						int cityID;
 						cin >> cityID;
-						players.at(i).flight(cityID);
+						players.at(choice).flight(cityID);
 						players.at(i).discard(matchingCardIndex);
 					}
 					else {
@@ -296,7 +331,8 @@ int main(int argc, char* argv[])
 					}
 					break;
 				}
-				case '5': //Building a Research Station 
+				case '5': //Building a Research Station
+
 				{
 					bool hasMatchingCard = false;
 					int matchingCardIndex;
@@ -312,11 +348,10 @@ int main(int argc, char* argv[])
 						City* location = newMap.accessCity(players.at(i).getLocation());
 						location->researchCenter = true;
 
-						players.at(i).treatDisease(newMap); //do we treat disease on the same turn??? (subtracts action if there are cubes)
+						players.at(i).treatDisease(newMap);
 
 						players.at(i).discard(matchingCardIndex);
 						cout << "A research station was built in " << location->getName() << endl;
-						players.at(i).subtractAction(); //problematic: can cause 2 actions to be subtracted
 					}
 					else {
 						cout << "To build a research station the card matching your location is required" << endl;
@@ -338,17 +373,9 @@ int main(int argc, char* argv[])
 				case '7': //Sharing knowledge
 
 				{
-					cout << "With which player do you want to share knowledge?" << endl;
-					int a = i;
-					while (a >= players.size() || a == i) {
-						cin >> a;
-						if (a == i) {
-							cout << "You cannot share knowledge with yourself...try again" << endl;
-						}
-						if (a >= players.size()) {
-							cout << "There are only " << players.size() << " players...try again" << endl;
-						}
-					}
+					cout << "With which player do you want to share knowledge?";
+					int a;
+					cin >> a;
 					Player* buddy = &players.at(a);
 					players.at(i).shareKnowledge(*buddy);
 					break;
@@ -365,16 +392,6 @@ int main(int argc, char* argv[])
 
 						cin >> cardInt1 >> cardInt2 >> cardInt3 >> cardInt4 >> cardInt5;
 
-						if (cardInt1 >= players.at(i).getHandSize() ||
-							cardInt2 >= players.at(i).getHandSize() ||
-							cardInt3 >= players.at(i).getHandSize() ||
-							cardInt4 >= players.at(i).getHandSize() ||
-							cardInt5 >= players.at(i).getHandSize()
-							) {
-							cout << "Indexes selected were out of range" << endl;
-							break;
-						}
-
 						bool areSameColor = false;	//check to see if all cities are same color
 						bool areRepeatInput = true; //check to make sure same card wasn't inputted twice
 						if (
@@ -383,7 +400,7 @@ int main(int argc, char* argv[])
 							newMap.accessCity(cardInt1)->getColor() == newMap.accessCity(cardInt4)->getColor() &&
 							newMap.accessCity(cardInt1)->getColor() == newMap.accessCity(cardInt5)->getColor()
 							) {
-							areSameColor = true;
+							areSameColor = true;;
 						}
 						if (
 							cardInt1 != cardInt2 && cardInt1 != cardInt3 && cardInt1 != cardInt4 && cardInt1 != cardInt5
@@ -396,17 +413,9 @@ int main(int argc, char* argv[])
 
 
 						if (areSameColor && !areRepeatInput) {
-							char cityColor = newMap.accessCity(cardInt1)->getColor();
-							if (cityColor == 'b')
-								newMap.blueCure = true;
-							else if (cityColor == 'y')
-								newMap.yellowCure = true;
-							else if (cityColor == 'w')
-								newMap.whiteCure = true;
-							else if (cityColor == 'r')
-								newMap.redCure = true;
-
-							players.at(i).treatDisease(newMap); //DO WE CURE ON SAME TURN???
+							\
+								//TODO CHANGE CURE MARKER
+								players.at(i).treatDisease(newMap); //DO WE CURE ON SAME TURN???
 
 							players.at(i).discard(cardInt1);
 							players.at(i).discard(cardInt2);
@@ -434,7 +443,7 @@ int main(int argc, char* argv[])
 
 					int cardInt = 0;
 					while (cardInt == 0 || cardInt >= players.at(i).getHandSize()) {
-						cin >> cardInt;
+					cin >> cardInt;
 					}
 
 					players.at(i).flight(players.at(i).getHand()[cardInt]->getId());
@@ -459,7 +468,7 @@ int main(int argc, char* argv[])
 
 			/////////////INFECT CITIES///////////////
 			cout << "------------------INFECTION TURN------------------" << endl;
-			cout << "Cubes remaining: " << InfectionDeck::infectionCubes << ", Outbreaks: " << InfectionDeck::numberOutbreaks 
+			cout << "Cubes remaining: " << InfectionDeck::infectionCubes << ", Outbreaks: " << InfectionDeck::numberOutbreaks
 				<< ", Marker position: " << InfectionDeck::infectionMarker << "(" << InfectionDeck::markerValues[InfectionDeck::infectionMarker] << ")" << endl;
 			ideck.playInfection();
 			if (InfectionDeck::infectionCubes < 0) {
