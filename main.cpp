@@ -12,6 +12,7 @@ int main(int argc, char* argv[])
 {
 	// Initializing the map 
 	Map newMap = Map(48);
+
 	newMap.startGame();
 
 	// Acessing the save from which we load the game
@@ -46,6 +47,9 @@ int main(int argc, char* argv[])
 	while (a > 4 || a == 0)
 	{
 		cin >> a;
+		if (a > 4 || a == 0) {
+			cout << "must choose between 2-4 players" << endl;
+		}
 	}
 
 	switch (a)
@@ -122,15 +126,6 @@ int main(int argc, char* argv[])
 		playerDeck.push_back(eventCard);
 	}
 
-	//Generating epidemic card to add to player deck
-
-	EpidemicCard* epidemicCard = new EpidemicCard();
-	for (int i = 0; i < 5; i++)
-	{
-		epidemicCard->setEpidemic(i);
-		playerDeck.push_back(epidemicCard);
-	}
-
 
 	// GENERATING ROLE DECK
 	vector<Role*> roleDeck;
@@ -162,11 +157,21 @@ int main(int argc, char* argv[])
 
 		Player* player = &players.at(i);
 
-		player->drawCards(newMap,playerDeck, cardNum);
+		player->drawCards(newMap, playerDeck, cardNum);
 
 		player->setRole(*roleDeck.back());
 
+		//TODO: muliple players as scientist?
 		roleDeck.pop_back();
+	}
+
+	//Generating epidemic card to add to player deck
+
+	EpidemicCard* epidemicCard = new EpidemicCard();
+	for (int i = 0; i < 5; i++)
+	{
+		epidemicCard->setEpidemic(i);
+		playerDeck.push_back(epidemicCard);
 	}
 
 
@@ -185,8 +190,7 @@ int main(int argc, char* argv[])
 			while (players.at(i).checkAction())
 			{
 				//Displaying the possible actions the player can make
-				cout << "Player " << i + 1 << " is at " << newMap.cities[players.at(i).getLocation()]->getName() 
-					<< ". That player is a " << players.at(i).getRole() << "." << endl;
+				cout << "Player " << i + 1 << " is at " << newMap.cities[players.at(i).getLocation()]->getName() << endl;
 				cout << "Player " << i + 1 << ": Choose your action..." << endl;
 
 				players.at(i).displayActionsLeft();
@@ -203,6 +207,7 @@ int main(int argc, char* argv[])
 				cout << "7. Share Knowledge" << endl;
 				cout << "8. Discover a Cure" << endl;
 				cout << "9. Play event card" << endl;
+				cout << "Player role: " << players.at(i).getRole() << endl;
 				if (players.at(i).getRole() == "Contingency Planner" || players.at(i).getRole() == "Operation Expert")
 					cout << "0. Role" << endl;
 
@@ -248,6 +253,7 @@ int main(int argc, char* argv[])
 						cout << "You are out of city cards select another action." << endl;
 						break;
 					}
+
 					cout << "Which city do you want to move to" << endl;
 
 					int cardInt = -1;
@@ -297,7 +303,7 @@ int main(int argc, char* argv[])
 						players.at(i).discard(matchingCardIndex);
 					}
 					else {
-						cout << "You cannot take a charter flight as you do not have a card matching the city you are currently on." << endl;
+						cout << "You cannot take a charter flight as you do not have a card matching the city you are currently on" << endl;
 					}
 
 					break;
@@ -357,6 +363,12 @@ int main(int argc, char* argv[])
 				case '5': //Building a Research Station
 
 				{
+					/*The Operations Expert may, as an action, either:
+					• build a research station in his current city without
+					discarding (or using) a City card, or
+					• once per turn, move from a research station to any city
+					by discarding any City card.*/
+
 					players.at(i).buildStation(&newMap);
 					break;
 				}
@@ -364,7 +376,6 @@ int main(int argc, char* argv[])
 				case '6':	//Treating a disease
 
 				{
-					City* location = newMap.accessCity(players.at(i).getLocation());
 
 					players.at(i).treatDisease(newMap); //TODO Might have to add disease cubes back to supply
 
@@ -380,13 +391,13 @@ int main(int argc, char* argv[])
 						cin >> a;
 						if (a == i) {
 							cout << "You cannot share knowledge with yourself...try again" << endl;
-
+							
 						}
 						if (a >= players.size()) {
 							cout << "There are only " << players.size() << " players...try again" << endl;
-
+							
 						}
-
+						
 					}
 					Player* buddy = &players.at(a);
 					players.at(i).shareKnowledge(buddy);
@@ -403,11 +414,14 @@ int main(int argc, char* argv[])
 					/*
 					if (players.at(i).getHand()[cardInt]->getType() == "Event Card")
 					players.at(i).displayHand();
+
 					int cardInt = 0;
 					while (cardInt == 0 || cardInt >= players.at(i).getHandSize()) {
 					cin >> cardInt;
 					}
+
 					players.at(i).flight(players.at(i).getHand()[cardInt]->getId());
+
 					players.at(i).discard(cardInt);
 					break;
 					*/
@@ -423,6 +437,8 @@ int main(int argc, char* argv[])
 
 						cout << "Which player's pawn do you want to move?" << endl;
 						cin >> choice;
+
+
 						while (choice <= 0 || choice > playerNum) cin >> choice;
 
 						cout << "Which city will you move it to ?";
@@ -432,27 +448,28 @@ int main(int argc, char* argv[])
 							cout << newLoc->index << " : " << newLoc->getName() << endl;
 						}
 
+
 						newMap.showCity(players.at(choice).getLocation());
 						players.at(choice).move(newMap);
 
+						break;
 					}
 
 					if (players.at(i).getRole() == "Operations Expert")
 					{
 						players.at(i).displayHand();
 						cout << "Which city do you want to move to?";
-
 						int cardInt = -1;
 						while (cardInt == -1 || cardInt >= players.at(i).getHandSize()) {
 							cin >> cardInt;
+							
 						}
-
 						players.at(i).flight(players.at(i).getHand()[cardInt]->getId());
 
 						players.at(i).discard(cardInt);
 						break;
+						
 					}
-
 					else
 					{
 						cout << "You are neither a dispatcher nor a dispatcher you can't do this!";

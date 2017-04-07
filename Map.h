@@ -12,7 +12,7 @@ class Map
 private:
 	int size;               //The number of cities in the map
 	bool** adjacencyMatrix; //represents the edges connecting cities
-	
+
 public:
 	vector<City*> cities;   //need to be public for Infectiondeck()
 	InfectionDeck* infectionDeck;
@@ -25,7 +25,7 @@ public:
 
 	//Constructors
 	Map(int i);
-	 //Destructor
+	//Destructor
 	~Map();
 
 	//Accessor and Mutator methods

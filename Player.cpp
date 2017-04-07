@@ -532,13 +532,13 @@ void Player::savePlayer()
 {
 	cout << "TRYING TO SAVE MAP" << endl;
 	ofstream myfile;
-	int num = this->id+1;
+	int num = this->id + 1;
 	std::string numId = to_string(num);
 	myfile.open("player" + numId + "save.txt");
 
 	if (myfile.is_open()) {
 
-		myfile << numId << ' ' << this->location << ' ' << this->role.getName() << '-' << this->role.getId() << ' ' << this->getPawn() << endl ;
+		myfile << numId << ' ' << this->location << ' ' << this->role.getName() << '-' << this->role.getId() << ' ' << this->getPawn() << endl;
 
 		for (int i = 0; i < cards.size(); i++)
 		{

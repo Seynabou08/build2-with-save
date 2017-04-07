@@ -18,4 +18,3 @@ public:
 	void setEpidemic(int a);
 	void playCard(Map map); //pass the infection deck
 };
-

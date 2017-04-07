@@ -20,7 +20,7 @@ Map::Map(int cityNum) {
 	yellowCure = false;
 	whiteCure = false;
 	redCure = false;
-	int researchStationNum=6;
+	int researchStationNum = 6;
 }
 
 Map::~Map() {
@@ -63,7 +63,7 @@ void  Map::showMap() {
 		string name = city->getName();
 		cout << "\n The cities linked to city " << name << " are : \n ";
 		vector<City*> connectedCities = getConnectedCities(i);
-		for (int i=0; i<connectedCities.size(); i++)
+		for (int i = 0; i<connectedCities.size(); i++)
 		{
 			cout << connectedCities[i]->index << ": " << connectedCities[i]->getName() << endl;
 		}
@@ -76,7 +76,7 @@ void Map::showCity(int i) {
 	string name = city->getName();
 	cout << "\n The cities linked to city " << name << " are : \n ";
 	vector<City*> connectedCities = getConnectedCities(i);
-	for (int i=0; i<connectedCities.size(); i++)
+	for (int i = 0; i<connectedCities.size(); i++)
 	{
 		cout << connectedCities[i]->index << ": " << connectedCities[i]->getName() << endl;
 	}
@@ -86,14 +86,14 @@ void Map::showCity(int i) {
 
 //Initialising the official Pandemic map. Each city is assigned an integer and it helps represent the position of the pawn
 void Map::startGame() {
-	string cityName[] = { "San Francisco", "Los Angeles", "Chicago", "Mexico City", "Lima","Santiago", "Toronto", "Atlanta",
+	string cityName[] = { "San Francisco", "Los Angeles", "Chicago", "Mexico City", "Lima", "Santiago", "Toronto", "Atlanta",
 		"Miami", "Bogota", "New York", "Washington", "Sao Paulo", "Buenos Aires", "London", "Paris", "Madrid",
 		"Lagos", "Kinshasa", "Essen", "Milan", "Algiers", "Khartoum", "Johannesburg", "St Petersburg", "Istanbul",
 		"Cairo", "Moscow", "Baghdad", "Riyadh", "Tehran", "Karachi", "Delhi", "Mumbai", "Kolkata", "Chennai", "Beijing",
 		"Seoul", "Shanghai", "Hong Kong", "Bangkok", "Tokyo", "Osaka", "Taipei", "Manila", "Ho Chi Minh City",
 		"Jakarta", "Sydney" };
 
-	
+
 
 	//initialize adjacency matrix
 	adjacencyMatrix = new bool*[48];
@@ -109,7 +109,7 @@ void Map::startGame() {
 
 
 	int blue[] = { 1, 3, 7, 8, 11, 12, 15, 16, 17, 20, 21, 25 };
-	 
+
 	//assign colour blue
 	for (int j = 0; j < 12; j++) {
 		cities[blue[j]]->colour = 'b';
@@ -120,13 +120,13 @@ void Map::startGame() {
 	for (int j = 0; j < 12; j++) {
 		cities[yellow[j]]->colour = 'y';
 	}
-	
+
 	int white[] = { 22, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36 };
 	//assign colour white
 	for (int j = 0; j < 12; j++) {
 		cities[white[j]]->colour = 'w';
 	}
-	
+
 	int red[] = { 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48 };
 	//assign colour red
 	for (int j = 0; j < 12; j++) {
@@ -231,7 +231,7 @@ void Map::saveMap() {
 	cout << "TRYING TO SAVING MAP" << endl;
 	ofstream myfile;
 	myfile.open("save.txt");
-	
+
 	if (myfile.is_open()) {
 		for (int i = 0; i < 48; i++) {
 			myfile << cities[i]->index << ' ' << cities[i]->name << ' ' <<
@@ -263,8 +263,8 @@ void Map::loadMap(ifstream myfile) {
 		while (getline(myfile, line))
 		{
 			//when it reads the first element it reads and sets the index of the city to the value read. We convert that string to an integer using stoi
-			getline(myfile, lineToBeInputed, ' '); 
-			cities[i]->index =stoi(lineToBeInputed);
+			getline(myfile, lineToBeInputed, ' ');
+			cities[i]->index = stoi(lineToBeInputed);
 
 
 			//when it reads the second element it reads and sets the name of the city to the value read.
@@ -279,7 +279,7 @@ void Map::loadMap(ifstream myfile) {
 
 			//when it reads the 4th element it sets the infection level of the city to the values read. We convert that string to an integer using stoi
 			getline(myfile, lineToBeInputed, ' ');
-			
+
 			cities[i]->infectionLevel = stoi(lineToBeInputed);
 
 
@@ -295,4 +295,3 @@ void Map::loadMap(ifstream myfile) {
 	myfile.close();
 
 }
-

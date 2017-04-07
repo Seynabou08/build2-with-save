@@ -5,7 +5,7 @@
 EpidemicCard::EpidemicCard() :Card(){
 }
 
-EpidemicCard::EpidemicCard(string n, char c, int a) : Card(n,c,a){
+EpidemicCard::EpidemicCard(string n, char c, int a) : Card(n, c, a){
 }
 
 EpidemicCard::~EpidemicCard()
