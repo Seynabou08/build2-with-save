@@ -521,13 +521,12 @@ void Player::discoverCure(Map m)
 	}
 }
 
-//this will be commented out until  we fix the issue with saving and loading
 
 int Player::getHandSize() {
 	return this->cards.size();
 }
 
-
+//this will be commented out until  we fix the issue with saving and loading
 void Player::savePlayer()
 {
 	cout << "TRYING TO SAVE MAP" << endl;

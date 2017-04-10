@@ -5,6 +5,10 @@
 #include <iostream>
 #include <algorithm>
 #include "Player.h"
+#include "GameStatisticsObservable.h"
+#include "GameStatisticsObserver.h"
+#include "InfectionStatsObserver.h"
+#include "PercentageObserver.h"
 
 using namespace std;
 
@@ -26,8 +30,6 @@ int main(int argc, char* argv[])
 
 	//displaying the map
 	newMap.showMap();
-
-
 
 	//Place the research station in Atlanta.
 
@@ -173,10 +175,18 @@ int main(int argc, char* argv[])
 		epidemicCard->setEpidemic(i);
 		playerDeck.push_back(epidemicCard);
 	}
+	random_shuffle(playerDeck.begin(), playerDeck.end());
 
 
 	//Displaying player locations
 	for (int i = 0; i < playerNum; i++) cout << "Player " << i + 1 << " is at " << newMap.cities[players.at(i).getLocation()]->getName() << endl;
+
+
+	//Creating Game Statistics object
+	GameStatisticsObservable gameStatsOb = GameStatisticsObservable(playerNum);
+	//GameStatisticsObserver gameStatsView = GameStatisticsObserver(&gameStatsOb);
+	//GameStatisticsObserver gameStatsView = GameStatisticsObserver(&gameStatsOb, new InfectionStatsObserver(&gameStatsOb));	//same as above line but with decorator
+	GameStatisticsObserver gameStatsView = GameStatisticsObserver(&gameStatsOb, new InfectionStatsObserver(&gameStatsOb, new PercentageObserver(&gameStatsOb)));	//same as above line but with 2 decorator
 
 
 	bool gameover = false;
@@ -194,6 +204,17 @@ int main(int argc, char* argv[])
 				cout << "Player " << i + 1 << ": Choose your action..." << endl;
 
 				players.at(i).displayActionsLeft();
+
+
+				//Manually update observable (probably not best way to do this)
+				gameStatsOb.updateCitiesInfected(newMap.cities);
+				gameStatsOb.updateNumResourcesPerPlayer(players);
+				gameStatsOb.updateNumCubesOnMap(newMap.cities);
+				gameStatsOb.updateNumResourcesRemaining(playerDeck);
+				gameStatsOb.updateNumCubesRemaining(&ideck);
+				//Display game stats
+				gameStatsView.update();
+
 
 				//PLAYER ACTIONS
 				//TODO REMOVE ABILIY TO MOVE/FLY TO EPIDEMIC CARDS
