@@ -85,6 +85,47 @@ string Player::getRole()
 	return this->role.getRole();
 }
 
+City Player::getCity()
+{
+	return city;
+}
+
+void Player::setPawn(char ch)
+{
+	switch(ch)
+	{
+	case 'b':
+		this->pawn = BLUE;
+		break;
+
+	case 'g':
+		this->pawn = GREEN;
+		break;
+
+	case 'r':
+		this->pawn = RED;
+		break;
+
+	case 'y':
+		this->pawn = YELLOW;
+		break;
+
+	case 'x':
+		this->pawn = BLACK;
+		break;
+	}
+}
+
+void Player::setId(int i)
+{
+	id = i;
+}
+
+void Player::setLocation(int i)
+{
+	location = i;
+}
+
 char Player::getPawn()
 {
 	switch (this->pawn)
@@ -526,128 +567,6 @@ int Player::getHandSize() {
 	return this->cards.size();
 }
 
-//this will be commented out until  we fix the issue with saving and loading
-void Player::savePlayer()
-{
-	cout << "TRYING TO SAVE MAP" << endl;
-	ofstream myfile;
-	int num = this->id + 1;
-	std::string numId = to_string(num);
-	myfile.open("player" + numId + "save.txt");
-
-	if (myfile.is_open()) {
-
-		myfile << numId << ' ' << this->location << ' ' << this->role.getName() << '-' << this->role.getId() << ' ' << this->getPawn() << endl;
-
-		for (int i = 0; i < cards.size(); i++)
-		{
-			myfile << cards[i]->getType() << '-' << cards[i]->getId() << endl;
-		}
-
-
-		cout << "SAVE SUCCESSFUL" << endl;
-	}
-	else {
-		cout << "COULD NOT CREATE SAVE FILE" << endl;
-	}
-
-	myfile.close();
-
-}
 
 
 
-
-//loading one of the saved files
-void Player::loadPlayer(ifstream myfile, vector<Card*> cc, vector<Card*> rc) {
-
-
-	int num = this->id;
-	string numId = to_string(num);
-	myfile.open("player" + numId + "save.txt");
-
-	string line;
-	string lineToBeInputed;
-
-
-	ifstream myFile;
-	myFile.open("save.txt");
-
-
-	if (myfile.is_open())
-	{
-		int i = 0;
-		while (getline(myfile, line))
-		{
-			//Getting the id
-			getline(myfile, lineToBeInputed, ' ');
-			this->id = stoi(lineToBeInputed);
-
-			//Getting the location
-			getline(myfile, lineToBeInputed, ' ');
-			this->location = stoi(lineToBeInputed);;
-
-			//Getting the role
-			getline(myfile, lineToBeInputed, '-');
-			string s = lineToBeInputed;
-			getline(myfile, lineToBeInputed, ' ');
-			int j = stoi(lineToBeInputed);
-			this->role.setRole(s, j);
-
-			//Getting the Pawn
-			//getline(myfile, lineToBeInputed, ' ');
-			//char line = lineToBeInputed;
-
-			const char *charac = lineToBeInputed.c_str();
-			const char c = *charac;
-			switch (c)
-			{
-			case 'b':
-				this->pawn = BLUE;
-				break;
-
-			case 'g':
-				this->pawn = GREEN;
-				break;
-
-			case 'r':
-				this->pawn = RED;
-				break;
-
-			case 'y':
-				this->pawn = YELLOW;
-				break;
-
-			case 'x':
-				this->pawn = BLACK;
-				break;
-			}
-
-			//Getting the hand
-
-
-
-			//cards[i]->getName() << " " << cards[i]->getId << endl;
-			for (int i = 0; i < cards.size(); i++)
-			{
-				getline(myfile, lineToBeInputed, '-');
-				string s = lineToBeInputed;
-				getline(myfile, lineToBeInputed, ' ');
-				int j = stoi(lineToBeInputed);
-				if (s == "city card")
-				{
-					cards.push_back(cc.at(j));
-				}
-
-
-
-			}
-			myfile.close();
-		}
-
-		myfile.close();
-
-	}
-
-
-}

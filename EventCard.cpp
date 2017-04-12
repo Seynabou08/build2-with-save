@@ -3,6 +3,7 @@
 EventCard::EventCard(string n, int i) :Card(n, 'r', i)
 {
 	eCard = Card(n, 'r', i);
+	this->setType("Event Card");
 }
 
 EventCard::EventCard() : Card("null", 'r', 0)
@@ -12,12 +13,6 @@ EventCard::EventCard() : Card("null", 'r', 0)
 
 EventCard::~EventCard(){}
 
-void EventCard::setEvent(string eventChosen, int a)
-{
-	this->assignedEvent = eventChosen;
-	this->setName("Event Card");
-	this->setId(a);
-}
 
 string EventCard::getEventCard()
 {

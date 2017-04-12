@@ -37,7 +37,11 @@ public:
 	vector<Card*> getHand();
 	void setHand(vector<Card*> c);
 	void setRole(Role rCard);
+	void setPawn(char ch);
+	void setId(int i);
+	void setLocation(int i);
 	string getRole();
+	City getCity();
 	char getPawn();
 	int getId();
 	int getLocation();
@@ -64,17 +68,13 @@ public:
 	//passive effects check
 	void checkPassiveRole();
 
-	//save and load functions
-	void savePlayer();
-	//void loadPlayer(string filename);
-	void loadPlayer(ifstream filename, vector<Card*> cc, vector<Card*> rc);
-
 	//pawn color enum type
 	enum pawnColors { BLACK, GREEN, BLUE, RED, YELLOW };
 
 private:
 	int id;
 	int location;
+	City city;
 	pawnColors pawn;
 	vector <Card*> cards;
 	Role role;

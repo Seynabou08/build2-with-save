@@ -20,8 +20,7 @@ public:
 	void printEventCard();
 
 	//Accessor and Mutator methods
-	void setEvent(string eventChosen, int a);
-
+	
 	string getEventCard();
 
 private:

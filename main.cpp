@@ -9,6 +9,7 @@
 #include "GameStatisticsObserver.h"
 #include "InfectionStatsObserver.h"
 #include "PercentageObserver.h"
+#include "Director.cpp"
 
 using namespace std;
 
@@ -17,16 +18,9 @@ int main(int argc, char* argv[])
 	// Initializing the map 
 	Map newMap = Map(48);
 
-	newMap.startGame();
-
-	// Acessing the save from which we load the game
-	ifstream file("save.txt");
-
-	// newMap.loadMap(ifstream("save.txt")); //LOADING DOESNT WORK
-
-
-	//saving the file in visual studio folder
-	newMap.saveMap();
+	Director director;
+	director.ConstructMap(new MapSaver);
+	
 
 	//displaying the map
 	newMap.showMap();
@@ -124,7 +118,8 @@ int main(int argc, char* argv[])
 	EventCard* eventCard = new EventCard();
 	for (int i = 0; i < 5; i++)
 	{
-		eventCard->setEvent(eventNames[i], i);
+		eventCard->setName(eventNames[i]);
+		eventCard->setId(i);
 		playerDeck.push_back(eventCard);
 	}
 
@@ -509,8 +504,11 @@ int main(int argc, char* argv[])
 			////////////END TURN / DRAW 2 PLAYER CARDS////////////
 			players.at(i).concludeTurn(playerDeck, newMap);
 
-			players.at(i).savePlayer();
-			//newMap.saveMap();
+
+			director.SavePlayer(new PlayerSaver);
+
+			director.SaveMap(new MapSaver);
+
 
 
 

@@ -45,9 +45,5 @@ public:
 
 	//Sets up the city names, links them appropriatly and adds color based on regions
 	void startGame();
-
-	//Saving and loading
-	void saveMap();
-	void loadMap(ifstream myfile);
 };
 #endif

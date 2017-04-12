@@ -3,6 +3,7 @@
 Role::Role(string n, int i):Card(n,'r', i)
 {
     rCard=Card();
+
 }
 
 Role::Role():Card("null", 'r', 0)
