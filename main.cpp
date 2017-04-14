@@ -495,13 +495,7 @@ int main(int argc, char* argv[])
 					case'5': //examine the top 6 cards of the infection deck and rearrange them to your liking
 					{
 
-						cout << "In which city do you want to add a reserch center?";
-						cin >> cityChoice;
-						while (cityChoice <= 0 || cityChoice > 48) cin >> cityChoice;
-
-						players.at(i).buildStation(&newMap);
-						players.at(i).increaseAction();
-
+						
 						break;
 					}
 
