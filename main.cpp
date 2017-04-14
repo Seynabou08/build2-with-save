@@ -192,6 +192,7 @@ int main(int argc, char* argv[])
 
 
 	bool gameover = false;
+	bool isQuietNight;
 
 	// This loop ensures that each player gets a turn one after te other followed by infection turns
 	while (!gameover) {   //If gameover is true we will exit the loop and that ends the game
@@ -453,6 +454,7 @@ int main(int argc, char* argv[])
 					players.at(i).discard(cardInt);
 					break;
 					*/
+
 				}
 
 				case '0':
@@ -525,20 +527,31 @@ int main(int argc, char* argv[])
 
 
 			/////////////INFECT CITIES///////////////
-			cout << "------------------INFECTION TURN------------------" << endl;
-			cout << "Cubes remaining: " << InfectionDeck::infectionCubes << ", Outbreaks: " << InfectionDeck::numberOutbreaks
-				<< ", Marker position: " << InfectionDeck::infectionMarker << "(" << InfectionDeck::markerValues[InfectionDeck::infectionMarker] << ")" << endl;
-			ideck.playInfection(players, newMap);	//pass the players for the Quarantine Specialist effect
-			if (InfectionDeck::infectionCubes < 0) {
-				//gameover = true;
-				cout << "GAME OVER: You have run out of infection cubes" << endl;
-				break;
+			isQuietNight = false;
+			for (int j = 0; j < players.at(i).getHandSize(); j++) {
+				if (players.at(i).getHand()[j]->getType() == "Event Card" && players.at(i).getHand()[j]->getName() == "One Quiet Night") {
+					isQuietNight = true;
+					players.at(i).discard(j);
+				}
 			}
-			if (InfectionDeck::numberOutbreaks >= 8) {
-				//gameover = true;
-				cout << "GAME OVER: Too many outbreaks have occurred" << endl;
-				break;
+
+			if (!isQuietNight) {
+				cout << "------------------INFECTION TURN------------------" << endl;
+				cout << "Cubes remaining: " << InfectionDeck::infectionCubes << ", Outbreaks: " << InfectionDeck::numberOutbreaks
+					<< ", Marker position: " << InfectionDeck::infectionMarker << "(" << InfectionDeck::markerValues[InfectionDeck::infectionMarker] << ")" << endl;
+				ideck.playInfection(players, newMap);	//pass the players for the Quarantine Specialist effect
+				if (InfectionDeck::infectionCubes < 0) {
+					//gameover = true;
+					cout << "GAME OVER: You have run out of infection cubes" << endl;
+					break;
+				}
+				if (InfectionDeck::numberOutbreaks >= 8) {
+					//gameover = true;
+					cout << "GAME OVER: Too many outbreaks have occurred" << endl;
+					break;
+				}
 			}
+
 		}
 
 
