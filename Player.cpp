@@ -379,6 +379,10 @@ void Player::treatDisease(Map m)
 			c.setInfectionLevel(0);
 			c.setInfection(false);
 		}
+		else if (this->getRole() == "Medic") {	//medic always removes every infection
+			c.setInfectionLevel(0);
+			c.setInfection(false);
+		}
 		else
 		{
 			c.decrementInfection();
@@ -392,7 +396,7 @@ void Player::treatDisease(Map m)
 	{
 		//city has no infection to remove
 	}
-	delete[] cp;
+	delete[] cp; //not sure if we need this or not
 }
 
 void Player::shareKnowledge(Player* tg)
