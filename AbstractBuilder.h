@@ -1,6 +1,6 @@
 #pragma once
-#include "Map.h"
-#include "Player.h"
+#include "Map/Map.h"
+#include "Player/Player.h"
 
 class AbstractBuilder
 {

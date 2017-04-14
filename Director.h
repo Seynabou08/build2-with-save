@@ -1,6 +1,6 @@
 #pragma once
-#include "MapSaver.h"
-#include "PlayerSaver.h"
+#include "Map/MapSaver.h"
+#include "Player/PlayerSaver.h"
 #include <iostream>
 #include <fstream>
 class Director

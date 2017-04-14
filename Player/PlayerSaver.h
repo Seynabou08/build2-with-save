@@ -1,10 +1,10 @@
 #pragma once
-#include "AbstractBuilder.h"
-#include "Map.h"
-#include "EventCard.h"
-#include "Role.h"
-#include "Player.h"
-
+#include "../AbstractBuilder.h"
+#include "../Map/Map.h"
+#include "../Cards/EventCard.h"
+#include "../Cards/Role.h"
+#include "../Player/Player.h"
+using namespace std;
 
 class PlayerSaver : public AbstractBuilder
 {
@@ -12,7 +12,8 @@ public:
 	PlayerSaver();
 	~PlayerSaver();
 
-	void Save()
+	
+	void Save(Player* player)
 	{
 		cout << "TRYING TO SAVE MAP" << endl;
 		ofstream myfile;

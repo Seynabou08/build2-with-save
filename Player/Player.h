@@ -1,11 +1,11 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include "Card.h"
-#include "Role.h"
-#include "CityCard.h"
-#include "ReferenceCard.h"
-#include "EpidemicCard.h"
+#include "../Cards/Card.h"
+#include "../Cards/Role.h"
+#include "../Cards/CityCard.h"
+#include "../Cards/ReferenceCard.h"
+#include "../Cards/EpidemicCard.h"
 #include <iostream>
 #include <fstream>
 #include <vector>

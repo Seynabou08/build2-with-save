@@ -4,6 +4,6 @@ PlayerSaver::PlayerSaver() : AbstractBuilder()
 {
 }
 
-PlayerSaver::~PlayerSaver()
+PlayerSaver::~PlayerSaver(Player* player)
 {
 }

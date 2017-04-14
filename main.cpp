@@ -1,15 +1,15 @@
-#include "Map.h"
-#include "EventCard.h"
-#include "InfectionDeck.h"
-#include "EpidemicCard.h"
+#include "Map/Map.h"
+#include "Cards/EventCard.h"
+#include "Cards/InfectionDeck.h"
+#include "Cards/EpidemicCard.h"
+#include "Player/Player.h"
+#include "Observers/GameStatisticsObservable.h"
+#include "Observers/GameStatisticsObserver.h"
+#include "Observers/InfectionStatsObserver.h"
+#include "Observers/PercentageObserver.h"
+#include "Director.h"
 #include <iostream>
 #include <algorithm>
-#include "Player.h"
-#include "GameStatisticsObservable.h"
-#include "GameStatisticsObserver.h"
-#include "InfectionStatsObserver.h"
-#include "PercentageObserver.h"
-#include "Director.h"
 
 using namespace std;
 
@@ -384,9 +384,9 @@ int main(int argc, char* argv[])
 
 				{
 					/*The Operations Expert may, as an action, either:
-					• build a research station in his current city without
+					ï¿½ build a research station in his current city without
 					discarding (or using) a City card, or
-					• once per turn, move from a research station to any city
+					ï¿½ once per turn, move from a research station to any city
 					by discarding any City card.*/
 
 					players.at(i).buildStation(&newMap);

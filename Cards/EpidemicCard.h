@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 #include "InfectionDeck.h"
-#include "Map.h"
+#include "../Map/Map.h"
 using namespace std;
 
 class EpidemicCard : public Card {
