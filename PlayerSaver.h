@@ -9,7 +9,10 @@
 class PlayerSaver : public AbstractBuilder
 {
 public:
-	virtual void Save()
+	PlayerSaver();
+	~PlayerSaver();
+
+	void Save()
 	{
 		cout << "TRYING TO SAVE MAP" << endl;
 		ofstream myfile;
@@ -39,42 +42,39 @@ public:
 	}
 
 
-	virtual void Load(ifstream myfile)
+	void Load(ifstream* myfile)
 	{
 
 
 
 		int num = player->getId();
 		string numId = to_string(num);
-		myfile.open("player" + numId + "save.txt");
+		myfile->open("player" + numId + "save.txt");
 
 		string line;
 		string lineToBeInputed;
 
 
-		ifstream myFile;
-		myFile.open("save.txt");
 
-
-		if (myfile.is_open())
+		if (myfile->is_open())
 		{
 			int i = 0;
-			while (getline(myfile, line))
+			while (getline(*myfile, line))
 			{
 				//Getting the id
-				getline(myfile, lineToBeInputed, ' ');
+				getline(*myfile, lineToBeInputed, ' ');
 				player->setId(stoi(lineToBeInputed));
 
 				//Getting the location
-				getline(myfile, lineToBeInputed, ' ');
+				getline(*myfile, lineToBeInputed, ' ');
 				player->setLocation(stoi(lineToBeInputed));
 
 				//Getting the role
-				getline(myfile, lineToBeInputed, '-');
+				getline(*myfile, lineToBeInputed, '-');
 				string s1 = lineToBeInputed;
-				getline(myfile, lineToBeInputed, '-');
+				getline(*myfile, lineToBeInputed, '-');
 				string s2 = lineToBeInputed;
-				getline(myfile, lineToBeInputed, ' ');
+				getline(*myfile, lineToBeInputed, ' ');
 				int j = stoi(lineToBeInputed);
 				Role rcard = Role(s2, j);
 				player->setRole(rcard);
@@ -87,15 +87,15 @@ public:
 				//Getting the hand
 				vector<Card*> cards;
 				//player->getHand[i]->getName() << " " << player->getHand[i]->getId << endl;
-				if (myfile.is_open()) 
+				if (myfile->is_open()) 
 				{
-					getline(myfile, lineToBeInputed, '-');
+					getline(*myfile, lineToBeInputed, '-');
 					string s1 = lineToBeInputed;
 
-					getline(myfile, lineToBeInputed, '-');
+					getline(*myfile, lineToBeInputed, '-');
 					string s2 = lineToBeInputed;
 
-					getline(myfile, lineToBeInputed, ' ');
+					getline(*myfile, lineToBeInputed, ' ');
 					int j = stoi(lineToBeInputed);
 
 					if (s1 == "city card")
@@ -112,10 +112,10 @@ public:
 
 
 				}
-				myfile.close();
+				myfile->close();
 			}
 
-			myfile.close();
+			myfile->close();
 
 		}
 

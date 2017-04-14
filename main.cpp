@@ -9,7 +9,7 @@
 #include "GameStatisticsObserver.h"
 #include "InfectionStatsObserver.h"
 #include "PercentageObserver.h"
-#include "Director.cpp"
+#include "Director.h"
 
 using namespace std;
 
@@ -17,9 +17,13 @@ int main(int argc, char* argv[])
 {
 	// Initializing the map 
 	Map newMap = Map(48);
+	newMap.startGame();
+	//string fileName = "save.txt";
+	//ifstream myfile;
+	//myfile.open(fileName.data());
 
 	Director director;
-	director.ConstructMap(new MapSaver);
+	//director.ConstructMap(new MapSaver(&newMap));
 	
 
 	//displaying the map
@@ -505,9 +509,9 @@ int main(int argc, char* argv[])
 			players.at(i).concludeTurn(playerDeck, newMap);
 
 
-			director.SavePlayer(new PlayerSaver);
+			director.SavePlayer(new PlayerSaver, &players.at(i));
 
-			director.SaveMap(new MapSaver);
+			director.SaveMap(new MapSaver(&newMap));
 
 
 

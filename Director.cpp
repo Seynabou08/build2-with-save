@@ -1,36 +1,10 @@
-#include "MapSaver.h"
-#include "PlayerSaver.h"
-#include <iostream>
-#include <fstream>
-class Director
+#include "Director.h"
+
+Director::Director()
 {
-private:
-	AbstractBuilder *builder;
+	this->myfile.open("save.txt", ifstream::in);
+}
 
-public:
-
-	void setBuilder(AbstractBuilder *builder) { this->builder = builder; };
-
-	ifstream myfile;
-	myfile.open("save.txt", ifstream::in);
-
-
-	void ConstructMap(MapSaver* mapSaver )
-	{
-		mapSaver->Load(myfile);
-	}
-	void ConstructPlayer(PlayerSaver* playerSaver)
-	{
-		playerSaver->Load(myfile);
-	}
-
-	void SaveMap(MapSaver* mapSaver)
-	{
-		mapSaver->Save();
-	}
-	void SavePlayer(PlayerSaver* playerSaver)
-	{
-		playerSaver->Save();
-	}
-
-};
+Director::~Director()
+{
+}
