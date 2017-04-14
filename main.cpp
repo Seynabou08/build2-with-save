@@ -25,7 +25,7 @@ int main(int argc, char* argv[])
 
 	//Director director;
 	//director.ConstructMap(new MapSaver(&newMap));
-	
+
 
 	//displaying the map
 	newMap.showMap();
@@ -427,13 +427,13 @@ int main(int argc, char* argv[])
 						cin >> a;
 						if (a == i) {
 							cout << "You cannot share knowledge with yourself...try again" << endl;
-							
+
 						}
 						if (a >= players.size()) {
 							cout << "There are only " << players.size() << " players...try again" << endl;
-							
+
 						}
-						
+
 					}
 					Player* buddy = &players.at(a);
 					players.at(i).shareKnowledge(buddy);
@@ -485,6 +485,20 @@ int main(int argc, char* argv[])
 
 						break;
 					}
+
+					case'3': //take a card from the discard pile of infection cards and remove it from game
+					{
+						int discard;
+
+						ideck.showDiscardPile();
+
+						cout << "Which card do you want to remove from the game?" << endl;
+						cin >> discard;
+
+
+						break;
+					}
+
 					case'4':
 					{
 
@@ -501,16 +515,42 @@ int main(int argc, char* argv[])
 
 					case'5': //examine the top 6 cards of the infection deck and rearrange them to your liking
 					{
+						int ind;
+						vector<InfectionCard> temp;
 
-						
+
+						for (int j = 0; j < 6; j++)
+						{
+							temp.push_back(ideck.deck.front());
+							cout << ideck.deck.at(j).getCityName() << endl;
+						}
+
+						string numbers[] = { "sixth","fifth","forth","third","second","first" };
+
+						for (int j = 0; j < 6; j++) {
+
+							cout << "Which card do you want to be in the " << numbers[j] << " position?" << endl;
+							cin >> ind;
+
+							ideck.deck.at(5 - j) = temp.at(ind);
+							temp.at(ind) = temp.back();
+							temp.pop_back();
+
+
+							for (int k = 0; k < temp.size(); k++)
+							{
+								cout << temp.at(k).getCityName() << endl;
+							}
+						}
+
 						break;
 					}
 
 					break;
 
 
+					}
 				}
-
 				case '0':
 				{
 					if (players.at(i).getRole() == "Dispatcher")
@@ -546,13 +586,13 @@ int main(int argc, char* argv[])
 						int cardInt = -1;
 						while (cardInt == -1 || cardInt >= players.at(i).getHandSize()) {
 							cin >> cardInt;
-							
+
 						}
 						players.at(i).flight(players.at(i).getHand()[cardInt]->getId());
 
 						players.at(i).discard(cardInt);
 						break;
-						
+
 					}
 					else
 					{

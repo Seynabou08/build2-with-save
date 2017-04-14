@@ -26,6 +26,8 @@ public:
 	void initialInfection(); // done once at beginning of game
 	void playInfection(vector<Player> players, Map m); // play an infection turn (play number of cards based on infectionMarker), parameters only necessary for quarantine specialist effect
 
+	void showDiscardPile();
+
 	void intensify(); //shuffle cards from discard pile and place on top of deck (when epidemic happens)
 
 private:

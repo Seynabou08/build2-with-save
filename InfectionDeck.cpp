@@ -89,6 +89,17 @@ void InfectionDeck::playInfection(vector<Player> players, Map m) //play 1-4 infe
 	}
 }
 
+
+void InfectionDeck::showDiscardPile()
+{
+
+	for (int i = 0; i < discardPile.size(); i++)
+	{
+		cout << "Card at index " << i << ": " << discardPile[i].getCityName() << endl;
+	}
+}
+
+
 void InfectionDeck::intensify()
 {
 	cout << "Resetting discard pile" << endl;
