@@ -218,6 +218,13 @@ int main(int argc, char* argv[])
 				//Display game stats
 				gameStatsView.update();
 
+				if (players.at(i).getRole() == "Medic") {	//Medic cures city if cured is discovered by just being there
+					char cityColor = players.at(i).getCity().getColor();
+					if ((cityColor == 'b' && newMap.blueCure) || (cityColor == 'y' && newMap.yellowCure) || (cityColor == 'w' && newMap.whiteCure) || (cityColor == 'r' && newMap.redCure)) {
+						players.at(i).getCity().setInfectionLevel(0);
+						players.at(i).getCity().setInfection(false);
+					}
+				}
 
 				//PLAYER ACTIONS
 				//TODO REMOVE ABILIY TO MOVE/FLY TO EPIDEMIC CARDS
@@ -393,9 +400,9 @@ int main(int argc, char* argv[])
 
 				{
 					/*The Operations Expert may, as an action, either:
-					• build a research station in his current city without
+					Â• build a research station in his current city without
 					discarding (or using) a City card, or
-					• once per turn, move from a research station to any city
+					Â• once per turn, move from a research station to any city
 					by discarding any City card.*/
 
 					players.at(i).buildStation(&newMap);
