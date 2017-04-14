@@ -24,7 +24,5 @@ public:
 	
 	virtual void Load(ifstream* myfile) = 0;
 	virtual void Save() = 0;
-protected:
-	Map* map;
-	Player* player;
+
 };

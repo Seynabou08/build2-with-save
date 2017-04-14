@@ -12,7 +12,7 @@ public:
 	PlayerSaver();
 	~PlayerSaver();
 
-	void Save()
+	void Save(Player* player)
 	{
 		cout << "TRYING TO SAVE MAP" << endl;
 		ofstream myfile;
@@ -42,7 +42,7 @@ public:
 	}
 
 
-	void Load(ifstream* myfile)
+	void Load(ifstream* myfile, Player* player)
 	{
 
 

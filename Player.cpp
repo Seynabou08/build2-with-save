@@ -493,68 +493,131 @@ void Player::shareKnowledge(Player* tg)
 void Player::discoverCure(Map m)
 {
 	if (m.accessCity(getLocation())->researchCenter) { //check to see if player is at research station
-		displayHandWithColors();
+		if (this->getRole() != "Scientist") {
+			displayHandWithColors();
 
-		int cardInt1, cardInt2, cardInt3, cardInt4, cardInt5;
+			int cardInt1, cardInt2, cardInt3, cardInt4, cardInt5;
 
-		cout << "Enter the ID of the cards you want to discard: (5 of same color)" << endl;
+			cout << "Enter the ID of the cards you want to discard: (5 of same color)" << endl;
 
-		cin >> cardInt1 >> cardInt2 >> cardInt3 >> cardInt4 >> cardInt5;
+			cin >> cardInt1 >> cardInt2 >> cardInt3 >> cardInt4 >> cardInt5;
 
-		if (cardInt1 >= getHandSize() ||
-			cardInt2 >= getHandSize() ||
-			cardInt3 >= getHandSize() ||
-			cardInt4 >= getHandSize() ||
-			cardInt5 >= getHandSize()
-			) {
-			cout << "Indexes selected were out of range" << endl;
-			return;
-		}
-
-		bool areSameColor = false;	//check to see if all cities are same color
-		bool areRepeatInput = true; //check to make sure same card wasn't inputted twice
-		if (
-			m.accessCity(cardInt1)->getColor() == m.accessCity(cardInt2)->getColor() &&
-			m.accessCity(cardInt1)->getColor() == m.accessCity(cardInt3)->getColor() &&
-			m.accessCity(cardInt1)->getColor() == m.accessCity(cardInt4)->getColor() &&
-			m.accessCity(cardInt1)->getColor() == m.accessCity(cardInt5)->getColor()
-			) {
-			areSameColor = true;
-		}
-		if (
-			cardInt1 != cardInt2 && cardInt1 != cardInt3 && cardInt1 != cardInt4 && cardInt1 != cardInt5
-			&& cardInt2 != cardInt3 && cardInt2 != cardInt4 && cardInt2 != cardInt5
-			&& cardInt3 != cardInt4 && cardInt3 != cardInt5
-			&& cardInt4 != cardInt5
-			) {
-			areRepeatInput = false;
-		}
-
-
-		if (areSameColor && !areRepeatInput) {
-			if (areSameColor && !areRepeatInput) {
-				char cityColor = m.accessCity(cardInt1)->getColor();
-				if (cityColor == 'b')
-					m.blueCure = true;
-				else if (cityColor == 'y')
-					m.yellowCure = true;
-				else if (cityColor == 'w')
-					m.whiteCure = true;
-				else if (cityColor == 'r')
-					m.redCure = true;
+			if (cardInt1 >= getHandSize() ||
+				cardInt2 >= getHandSize() ||
+				cardInt3 >= getHandSize() ||
+				cardInt4 >= getHandSize() ||
+				cardInt5 >= getHandSize()
+				) {
+				cout << "Indexes selected were out of range" << endl;
+				return;
 			}
 
-			discard(cardInt1);
-			discard(cardInt2);
-			discard(cardInt3);
-			discard(cardInt4);
-			discard(cardInt5);
+			bool areSameColor = false;	//check to see if all cities are same color
+			bool areRepeatInput = true; //check to make sure same card wasn't inputted twice
+			if (
+				m.accessCity(cardInt1)->getColor() == m.accessCity(cardInt2)->getColor() &&
+				m.accessCity(cardInt1)->getColor() == m.accessCity(cardInt3)->getColor() &&
+				m.accessCity(cardInt1)->getColor() == m.accessCity(cardInt4)->getColor() &&
+				m.accessCity(cardInt1)->getColor() == m.accessCity(cardInt5)->getColor()
+				) {
+				areSameColor = true;
+			}
+			if (
+				cardInt1 != cardInt2 && cardInt1 != cardInt3 && cardInt1 != cardInt4 && cardInt1 != cardInt5
+				&& cardInt2 != cardInt3 && cardInt2 != cardInt4 && cardInt2 != cardInt5
+				&& cardInt3 != cardInt4 && cardInt3 != cardInt5
+				&& cardInt4 != cardInt5
+				) {
+				areRepeatInput = false;
+			}
+
+
+			if (areSameColor && !areRepeatInput) {
+				if (areSameColor && !areRepeatInput) {
+					char cityColor = m.accessCity(cardInt1)->getColor();
+					if (cityColor == 'b')
+						m.blueCure = true;
+					else if (cityColor == 'y')
+						m.yellowCure = true;
+					else if (cityColor == 'w')
+						m.whiteCure = true;
+					else if (cityColor == 'r')
+						m.redCure = true;
+				}
+
+				discard(cardInt1);
+				discard(cardInt2);
+				discard(cardInt3);
+				discard(cardInt4);
+				discard(cardInt5);
+			}
+			else if (areRepeatInput) {
+				cout << "You inputted the same index more than once..." << endl;
+			}
+			else if (!areSameColor) {
+				cout << "You must input 5 cards of the same color" << endl;
+			}
 		}
-		else if (areRepeatInput) {
-			cout << "You inputted the same index more than once..." << endl;
-		}
-		else if (!areSameColor) {
-			cout << "You must input 5 cards of the same color" << endl;
+		else {	//player is a scientist
+			displayHandWithColors();
+
+			int cardInt1, cardInt2, cardInt3, cardInt4;
+
+			cout << "Enter the ID of the cards you want to discard: (4 of same color because SCIENTIST)" << endl;
+
+			cin >> cardInt1 >> cardInt2 >> cardInt3 >> cardInt4;
+
+			if (cardInt1 >= getHandSize() ||
+				cardInt2 >= getHandSize() ||
+				cardInt3 >= getHandSize() ||
+				cardInt4 >= getHandSize()
+				) {
+				cout << "Indexes selected were out of range" << endl;
+				return;
+			}
+
+			bool areSameColor = false;	//check to see if all cities are same color
+			bool areRepeatInput = true; //check to make sure same card wasn't inputted twice
+			if (
+				m.accessCity(cardInt1)->getColor() == m.accessCity(cardInt2)->getColor() &&
+				m.accessCity(cardInt1)->getColor() == m.accessCity(cardInt3)->getColor() &&
+				m.accessCity(cardInt1)->getColor() == m.accessCity(cardInt4)->getColor()
+				) {
+				areSameColor = true;
+			}
+			if (
+				cardInt1 != cardInt2 && cardInt1 != cardInt3 && cardInt1 != cardInt4
+				&& cardInt2 != cardInt3 && cardInt2 != cardInt4
+				&& cardInt3 != cardInt4
+				) {
+				areRepeatInput = false;
+			}
+
+
+			if (areSameColor && !areRepeatInput) {
+				if (areSameColor && !areRepeatInput) {
+					char cityColor = m.accessCity(cardInt1)->getColor();
+					if (cityColor == 'b')
+						m.blueCure = true;
+					else if (cityColor == 'y')
+						m.yellowCure = true;
+					else if (cityColor == 'w')
+						m.whiteCure = true;
+					else if (cityColor == 'r')
+						m.redCure = true;
+				}
+
+				discard(cardInt1);
+				discard(cardInt2);
+				discard(cardInt3);
+				discard(cardInt4);
+			}
+			else if (areRepeatInput) {
+				cout << "You inputted the same index more than once..." << endl;
+			}
+			else if (!areSameColor) {
+				cout << "You must input 5 cards of the same color" << endl;
+			}
 		}
 	}
 	else {

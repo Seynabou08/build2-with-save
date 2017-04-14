@@ -20,9 +20,9 @@ public:
 	{
 		mapSaver->Load(&myfile);
 	}
-	void ConstructPlayer(PlayerSaver* playerSaver)
+	void ConstructPlayer(PlayerSaver* playerSaver, Player* player)
 	{
-		playerSaver->Load(&myfile);
+		playerSaver->Load(&myfile, player);
 	}
 
 	void SaveMap(MapSaver* mapSaver)

@@ -18,11 +18,12 @@ int main(int argc, char* argv[])
 	// Initializing the map 
 	Map newMap = Map(48);
 	newMap.startGame();
+
 	//string fileName = "save.txt";
 	//ifstream myfile;
 	//myfile.open(fileName.data());
 
-	Director director;
+	//Director director;
 	//director.ConstructMap(new MapSaver(&newMap));
 	
 
@@ -134,9 +135,10 @@ int main(int argc, char* argv[])
 	string roleNames[] = { "Contingency Planner", "Dispatcher", "Medic",
 		"Operation Expert", "Quarantine Specialist", "Researcher", "Scientist" };
 
-	Role* roleCard = new Role();
+
 	for (int i = 0; i < 7; i++)
 	{
+		Role* roleCard = new Role();
 		roleCard->setRole(roleNames[i], i + 1);
 		roleDeck.push_back(roleCard);
 	}
@@ -151,7 +153,9 @@ int main(int argc, char* argv[])
 	cout << "INITIALIZING INFECTION DECK" << endl;
 	InfectionDeck ideck = InfectionDeck(newMap.cities);
 	ideck.init(48);
+	random_shuffle(ideck.deck.begin(), ideck.deck.end());	//shuffling is good
 	ideck.initialInfection();
+	random_shuffle(ideck.deck.begin(), ideck.deck.end());
 
 
 	for (int i = 0; i < playerNum; i++) {
@@ -162,7 +166,6 @@ int main(int argc, char* argv[])
 
 		player->setRole(*roleDeck.back());
 
-		//TODO: muliple players as scientist?
 		roleDeck.pop_back();
 	}
 
@@ -238,6 +241,7 @@ int main(int argc, char* argv[])
 				switch (action) {
 				case '1':	//Drive/Ferry
 				{
+					/*
 					int choice = i;
 
 					if (players.at(i).getRole() == "Contingency Planner")
@@ -247,15 +251,16 @@ int main(int argc, char* argv[])
 						while (choice <= 0 || choice > playerNum) cin >> choice;
 
 					}
+					*/
 
-					newMap.showCity(players.at(choice).getLocation());
-					players.at(choice).move(newMap);
+					newMap.showCity(players.at(i).getLocation());
+					players.at(i).move(newMap);
 
 					break;
 				}
 				case '2':	//Direct Flight: Discard a City card to move to the city named on the card.
 				{
-
+					/*
 					int choice = i;
 
 					if (players.at(i).getRole() == "Dispatcher")
@@ -263,8 +268,8 @@ int main(int argc, char* argv[])
 						cout << "Which player's pawn do you want to move?";
 						cin >> choice;
 						while (choice <= 0 || choice > playerNum) cin >> choice;
-
 					}
+					*/
 
 					players.at(i).displayHand();
 
@@ -281,13 +286,14 @@ int main(int argc, char* argv[])
 						cin >> cardInt;
 					}
 
-					players.at(choice).flight(players.at(i).getHand()[cardInt]->getId());
+					players.at(i).flight(players.at(i).getHand()[cardInt]->getId());
 
 					players.at(i).discard(cardInt);
 					break;
 				}
 				case '3':	//Charter Flight: Discard the City card that matches the city you are in to move to any city.
 				{
+					/*
 					int choice = i;
 
 					if (players.at(i).getRole() == "Dispatcher")
@@ -297,12 +303,13 @@ int main(int argc, char* argv[])
 						while (choice <= 0 || choice > playerNum) cin >> choice;
 
 					}
+					*/
 
 					//check for matching card
 					bool hasMatchingCard = false;
 					int matchingCardIndex;
 					for (int j = 0; j < players.at(i).getHandSize(); j++) {
-						if (players.at(i).getHand()[j]->getId() == players.at(choice).getLocation()) {
+						if (players.at(i).getHand()[j]->getId() == players.at(i).getLocation()) {
 							hasMatchingCard = true;
 							matchingCardIndex = j;
 						}
@@ -319,7 +326,7 @@ int main(int argc, char* argv[])
 
 						int cityID;
 						cin >> cityID;
-						players.at(choice).flight(cityID);
+						players.at(i).flight(cityID);
 						players.at(i).discard(matchingCardIndex);
 					}
 					else {
@@ -330,7 +337,7 @@ int main(int argc, char* argv[])
 				}
 				case '4': //Shuttle Flight	Move from a city with a research station to any other city that has a research station.
 				{
-
+					/*
 					int choice = i;
 
 					if (players.at(i).getRole() == "Dispatcher")
@@ -340,9 +347,10 @@ int main(int argc, char* argv[])
 						while (choice <= 0 || choice > playerNum) cin >> choice;
 
 					}
+					*/
 
 
-					City* location = newMap.accessCity(players.at(choice).getLocation());
+					City* location = newMap.accessCity(players.at(i).getLocation());
 					vector<int> validCities; //indexes of cities with research stations
 
 					if (location->researchCenter == true)
@@ -373,7 +381,7 @@ int main(int argc, char* argv[])
 							}
 
 							if (isValidCity) {
-								players.at(choice).flight(newLocation);
+								players.at(i).flight(newLocation);
 								break;
 							}
 						}
@@ -509,9 +517,9 @@ int main(int argc, char* argv[])
 			players.at(i).concludeTurn(playerDeck, newMap);
 
 
-			director.SavePlayer(new PlayerSaver, &players.at(i));
+			//director.SavePlayer(new PlayerSaver, &players.at(i));
 
-			director.SaveMap(new MapSaver(&newMap));
+			//director.SaveMap(new MapSaver(&newMap));
 
 
 

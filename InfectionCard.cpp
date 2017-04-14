@@ -58,6 +58,9 @@ void InfectionCard::playCardQuarantine(vector<City*> cities)	//cities is vector 
 			InfectionDeck::numberOutbreaks++;
 			cout << "An outbreak has occurred in " << this->getCityName() << "(" << InfectionDeck::numberOutbreaks << " outbreaks total)" << endl;
 		}
+		else {
+			cout << "An outbreak was prevented in " << this->getCityName() << " due to the Quarantine Specialist" << endl;
+		}
 	}
 	else if (this->city->infectionLevel < 3) {
 		for (int i = 0; i < cities.size(); i++) {
@@ -70,6 +73,9 @@ void InfectionCard::playCardQuarantine(vector<City*> cities)	//cities is vector 
 			this->city->incrementInfection();
 			cout << "The infection level in " << this->getCityName() << " is now " << this->city->infectionLevel << endl;
 			InfectionDeck::infectionCubes--;
+		}
+		else {
+			cout << "An outbreak was prevented in " << this->getCityName() << " due to the Quarantine Specialist" << endl;
 		}
 	}
 }

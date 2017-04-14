@@ -20,7 +20,13 @@ one quiet night: the next player to begin the playin the indector phase of their
 
 
 
-Implement role cards
+Implement role cards:
+Done:
+Quarantine Specialist, Operations Expert(just 1st ability), Researcher, Scientist
+
+Incomplete:
+Contigency Planner, Dispatcher, Medic, Operations Expert(2nd ability)
+
 
 Implement some of the commonly overlooked rules (in pdf)
 
