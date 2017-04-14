@@ -516,7 +516,7 @@ int main(int argc, char* argv[])
 			cout << "------------------INFECTION TURN------------------" << endl;
 			cout << "Cubes remaining: " << InfectionDeck::infectionCubes << ", Outbreaks: " << InfectionDeck::numberOutbreaks
 				<< ", Marker position: " << InfectionDeck::infectionMarker << "(" << InfectionDeck::markerValues[InfectionDeck::infectionMarker] << ")" << endl;
-			ideck.playInfection();
+			ideck.playInfection(players, newMap);	//pass the players for the Quarantine Specialist effect
 			if (InfectionDeck::infectionCubes < 0) {
 				//gameover = true;
 				cout << "GAME OVER: You have run out of infection cubes" << endl;

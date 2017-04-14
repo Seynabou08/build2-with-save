@@ -1,8 +1,10 @@
 #pragma once
 #include "InfectionCard.h"
-
 #include <vector>
 using namespace std;
+
+class Player; //forward declarations
+class Map;
 
 class InfectionDeck
 {
@@ -22,7 +24,7 @@ public:
 	void init(int numCities); //call at beginning of game
 
 	void initialInfection(); // done once at beginning of game
-	void playInfection(); // play an infection turn (play number of cards based on infectionMarker)
+	void playInfection(vector<Player> players, Map m); // play an infection turn (play number of cards based on infectionMarker), parameters only necessary for quarantine specialist effect
 
 	void intensify(); //shuffle cards from discard pile and place on top of deck (when epidemic happens)
 

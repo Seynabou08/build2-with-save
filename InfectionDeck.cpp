@@ -1,6 +1,8 @@
 #include "InfectionDeck.h"
 #include <algorithm> //for shuffling
 #include <iostream>
+#include "Player.h"
+#include "Map.h"
 using namespace std;
 
 int InfectionDeck::infectionCubes; //need another declaration for static to work
@@ -64,10 +66,26 @@ void InfectionDeck::initialInfection() //infect 3 cities with 3, 3 cities with 2
 	}
 }
 
-void InfectionDeck::playInfection() //play 1-4 infection cards
+void InfectionDeck::playInfection(vector<Player> players, Map m) //play 1-4 infection cards
 {
-	for (int i = 0; i < markerValues[infectionMarker]; i++) {
-		this->draw()->playCard();
+	bool isContigencyPlanner = false;
+	int playerNum = 0;
+	for (int j = 0; j < players.size(); j++) {
+		if (players.at(j).getRole() == "Quarantine Specialist") {
+			isContigencyPlanner = true;
+			playerNum = j;
+		}
+	}
+	if (!isContigencyPlanner) {
+		for (int i = 0; i < markerValues[infectionMarker]; i++) {
+			this->draw()->playCard();
+		}
+	}
+	else {
+		vector<City*> cities = m.getConnectedCities(players[playerNum].getLocation());
+		for (int i = 0; i < markerValues[infectionMarker]; i++) {
+			this->draw()->playCardQuarantine(cities);
+		}
 	}
 }
 

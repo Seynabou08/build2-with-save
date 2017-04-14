@@ -26,6 +26,7 @@ public:
 	int getID();
 	string getCityName();
 	void playCard();    //increment level based on infection marker
+	void playCardQuarantine(vector<City*> cities);    //plays card but doesn't affect cities near quarantine specialist
 	void setLevel(int level);  //set level manually
 	void makeOutbreak(); //raises the outbreak number and decreases the available infection cubes.
 

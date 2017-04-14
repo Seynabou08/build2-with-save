@@ -42,6 +42,38 @@ void InfectionCard::playCard() {
 	}
 }
 
+void InfectionCard::playCardQuarantine(vector<City*> cities)	//cities is vector of cities on/adjacent to quarantine specialist
+{
+	bool isQuarantined = false;
+
+	if (this->city->infectionLevel == 3 && !this->city->infected) {
+		for (int i = 0; i < cities.size(); i++) {
+			if (this->getCityName() == cities[i]->getName()) {
+				isQuarantined = true;
+			}
+		}
+
+		if (!isQuarantined) {
+			this->city->setInfection(true);
+			InfectionDeck::numberOutbreaks++;
+			cout << "An outbreak has occurred in " << this->getCityName() << "(" << InfectionDeck::numberOutbreaks << " outbreaks total)" << endl;
+		}
+	}
+	else if (this->city->infectionLevel < 3) {
+		for (int i = 0; i < cities.size(); i++) {
+			if (this->getCityName() == cities[i]->getName()) {
+				isQuarantined = true;
+			}
+		}
+
+		if (!isQuarantined) {
+			this->city->incrementInfection();
+			cout << "The infection level in " << this->getCityName() << " is now " << this->city->infectionLevel << endl;
+			InfectionDeck::infectionCubes--;
+		}
+	}
+}
+
 void InfectionCard::setLevel(int level)
 {
 	this->city->infectionLevel = level;
