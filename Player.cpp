@@ -232,6 +232,11 @@ void Player::subtractAction()
 	actionsLeft--;
 }
 
+void Player::increaseAction()
+{
+	this->actionsLeft++;
+}
+
 void Player::concludeTurn(vector<Card*> &deck, Map map)
 {
 	this->drawCards(map, deck, 2);

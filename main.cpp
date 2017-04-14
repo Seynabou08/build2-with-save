@@ -440,20 +440,73 @@ int main(int argc, char* argv[])
 				}
 				case '9':	//event cards
 				{
-					/*
-					if (players.at(i).getHand()[cardInt]->getType() == "Event Card")
-					players.at(i).displayHand();
 
-					int cardInt = 0;
-					while (cardInt == 0 || cardInt >= players.at(i).getHandSize()) {
-					cin >> cardInt;
+					int choice = i;
+					int cityChoice;
+					int cardId;
+					int num;
+
+					//check for event card
+					// DOESNT TAKE IN ACCOUNT IF THE PLAYER HAS MORE THAN ONE EVENT CARD
+					bool hasMatchingCard = false;
+					int matchingCardIndex;
+					for (int j = 0; j < players.at(i).getHandSize(); j++) {
+						if (players.at(i).getHand()[j]->getType() == "Event Card") {
+							cout << i << players.at(i).getHand()[j]->getName() << endl;
+							cardId = j;
+							num = players.at(i).getHand()[j]->getId();
+						}
 					}
 
-					players.at(i).flight(players.at(i).getHand()[cardInt]->getId());
 
-					players.at(i).discard(cardInt);
+					switch (num) {
+
+					case'1':
+					{
+
+						cout << "Which player's pawn do you want to move?";
+						cin >> choice;
+						while (choice <= 0 || choice > playerNum) cin >> choice;
+
+						cout << "Which city do you want to move to?";
+						cin >> cityChoice;
+						while (cityChoice <= 0 || cityChoice > 48) cin >> cityChoice;
+
+						players.at(i).flight(players.at(i).getHand()[cityChoice]->getId());
+
+						players.at(i).discard(cardId);
+
+						break;
+					}
+					case'4':
+					{
+
+						cout << "In which city do you want to add a reserch center?";
+						cin >> cityChoice;
+						while (cityChoice <= 0 || cityChoice > 48) cin >> cityChoice;
+
+						players.at(i).buildStation(&newMap);
+						players.at(i).increaseAction();
+
+						break;
+					}
+
+
+					case'5': //examine the top 6 cards of the infection deck and rearrange them to your liking
+					{
+
+						cout << "In which city do you want to add a reserch center?";
+						cin >> cityChoice;
+						while (cityChoice <= 0 || cityChoice > 48) cin >> cityChoice;
+
+						players.at(i).buildStation(&newMap);
+						players.at(i).increaseAction();
+
+						break;
+					}
+
 					break;
-					*/
+
 
 				}
 

@@ -55,18 +55,15 @@ public:
 	void treatDisease(Map m);
 	void shareKnowledge(Player* target);
 	void discoverCure(Map m);
-	void activateAbility(vector<Card> &deck);
 
 	//automatic mandatory actions
 	void startTurn();
 	void subtractAction();
+	void increaseAction();
 	void concludeTurn(vector<Card*> &deck, Map map);
 	void drawCards(Map map, vector<Card*> &deck, int num); //Changed so that pointer is passed
 	bool checkAction();
 	void discard(int a);
-
-	//passive effects check
-	void checkPassiveRole();
 
 	//pawn color enum type
 	enum pawnColors { BLACK, GREEN, BLUE, RED, YELLOW };
