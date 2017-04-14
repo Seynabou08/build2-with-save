@@ -55,6 +55,8 @@ public:
 	void treatDisease(Map m);
 	void shareKnowledge(Player* target);
 	void discoverCure(Map m);
+	
+	void dispatcherAbility(vector<Player>*, Map* m, int playerIndex);
 
 	//automatic mandatory actions
 	void startTurn();

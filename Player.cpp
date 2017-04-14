@@ -634,6 +634,44 @@ void Player::discoverCure(Map m)
 	}
 }
 
+void Player::dispatcherAbility(vector<Player>* players, Map* m, int playerIndex)
+{
+	int choice = playerIndex;
+	int location;
+	City* newLoc;
+
+	cout << "Which player's pawn do you want to move?" << endl;
+	cin >> choice;
+
+	while (choice < 0 || choice >= players->size() || choice == playerIndex) cin >> choice;
+
+	cout << "Which ability do you want to do?" << endl;
+	cout << "1: Move pawn to city containing another pawn" << endl;
+	cout << "2: Move another player's pawn as if it was your own" << endl;
+
+	int ability = 0;
+	while (ability < 1 || ability > 2) {
+		cin >> ability;
+	}
+
+	if (ability == 1) {	//move pawn to city containing another pawn
+		//display list of cities with pawns on them
+		cout << "Choose the city you want to move this player " << choice << " to " << endl;
+		for (int i = 0; i < players->size(); i++) {
+			cout << i << ": " << m->cities[players->at(i).getLocation()]->getName() << endl;
+		}
+		int cityChoice = -1;
+		while (cityChoice < 0 || cityChoice >= players->size()) {
+			cin >> cityChoice;
+		}
+		players->at(choice).setLocation(players->at(cityChoice).getLocation());
+		players->at(playerIndex).subtractAction();
+	}
+	else if(ability == 2) { //move another player's pawn as if it was your own
+	
+	}
+}
+
 
 int Player::getHandSize() {
 	return this->cards.size();
