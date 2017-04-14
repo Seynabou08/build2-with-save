@@ -8,11 +8,10 @@ Seynabou:
 
 Implement role cards:
 Done:
-Quarantine Specialist, Operations Expert(just 1st ability), Researcher, Scientist
+Quarantine Specialist, Operations Expert, Researcher, Scientist, Medic (first 2 effects)
 
 Incomplete:
-Contigency Planner, Dispatcher, Medic, Operations Expert(2nd ability)
-
+Contigency Planner, Dispatcher (half done)
 
 Implement some of the commonly overlooked rules (in pdf)
 
