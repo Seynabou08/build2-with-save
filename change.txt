@@ -1,19 +1,11 @@
 Seynabou: 
 - Look up I/O again
-- "Clean up"
 
 Implement role cards:
 Done: Quarantine Specialist, Operations Expert, Researcher, Scientist, Medic (first 2 effects)
 
-Incomplete: 
-Contigency Planner may take an Event card from anywhere in the Player Discard Pile and place it on his Role card. 
-Only 1 Event card can be on his role card at a time. It does not count against his hand limit.
-When the Contingency Planner plays the Event card on his role card,
-remove this Event card from the game (instead of discarding it).
-Dispatcher (half done)
+Incomplete: Dispatcher (half done)??
 
-Implement some of the commonly overlooked rules (in pdf):
-• You do not draw a replacement card after drawing an Epidemic card.
 
 • You may Discover a Cure at any Research Station — the color of its
 city does not need to match the disease you are curing.
