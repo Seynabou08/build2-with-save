@@ -4,6 +4,7 @@
 #include "Card.h"
 #include "Role.h"
 #include "CityCard.h"
+#include "EventCard.h"
 #include "ReferenceCard.h"
 #include "EpidemicCard.h"
 #include <iostream>
@@ -40,6 +41,11 @@ public:
 	void setPawn(char ch);
 	void setId(int i);
 	void setLocation(int i);
+
+	void setEventCard(Card ecard);
+	void removeEvent();
+	Card getEventCard();
+
 	string getRole();
 	City getCity();
 	char getPawn();
@@ -55,7 +61,6 @@ public:
 	void treatDisease(Map m);
 	void shareKnowledge(Player* target);
 	void discoverCure(Map m);
-	
 	void dispatcherAbility(vector<Player>*, Map* m, int playerIndex);
 
 	//automatic mandatory actions
@@ -79,6 +84,7 @@ private:
 	Role role;
 	int actionsLeft;
 	ReferenceCard rc;
+	Card eCard;
 	vector<EpidemicCard*> epCard;
 
 };

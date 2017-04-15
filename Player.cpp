@@ -80,6 +80,11 @@ void Player::setRole(Role rCard)
 	this->role = rCard;
 }
 
+Card Player::getEventCard()
+{
+	return eCard;
+}
+
 string Player::getRole()
 {
 	return this->role.getRole();
@@ -632,6 +637,17 @@ void Player::discoverCure(Map m)
 	else {
 		cout << "You must be at a research station to discover a cure" << endl;
 	}
+}
+
+void Player::setEventCard(Card ecard)
+{
+	eCard = ecard;
+}
+
+void Player::removeEvent()
+{
+	Card card = Card();
+	eCard = card;
 }
 
 void Player::dispatcherAbility(vector<Player>* players, Map* m, int playerIndex)

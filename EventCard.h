@@ -21,11 +21,11 @@ public:
 
 	//Accessor and Mutator methods
 	
-	string getEventCard();
+//	string getEventCard();
 
 private:
 	Card eCard;
-	string assignedEvent;
+	//string assignedEvent;
 	string type;
 };
 #endif

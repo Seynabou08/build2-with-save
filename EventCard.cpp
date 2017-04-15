@@ -13,11 +13,11 @@ EventCard::EventCard() : Card("null", 'r', 0)
 
 EventCard::~EventCard(){}
 
-
+/*
 string EventCard::getEventCard()
 {
-	return this->assignedEvent;
-}
+	return this->getName;
+}*/
 
 
 void EventCard::printEventCard()

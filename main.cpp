@@ -239,7 +239,8 @@ int main(int argc, char* argv[])
 				cout << "8. Discover a Cure" << endl;
 				cout << "9. Play event card" << endl;
 				cout << "Player role: " << players.at(i).getRole() << endl;
-				if (players.at(i).getRole() == "Contingency Planner" || players.at(i).getRole() == "Operation Expert")
+				if (players.at(i).getRole() == "Contingency Planner" || players.at(i).getRole() == "Operation Expert"|| 
+					(players.at(i).getRole() == "Contingency Planner" && players.at(i).getEventCard().getType() == "Event Card"))
 					cout << "0. Role" << endl;
 
 
@@ -397,7 +398,6 @@ int main(int argc, char* argv[])
 					break;
 				}
 				case '5': //Building a Research Station
-
 				{
 					/*The Operations Expert may, as an action, either:
 					 build a research station in his current city without
@@ -410,16 +410,13 @@ int main(int argc, char* argv[])
 				}
 
 				case '6':	//Treating a disease
-
 				{
 
 					players.at(i).treatDisease(newMap); //TODO Might have to add disease cubes back to supply
 
 					break;
 				}
-
 				case '7': //Sharing knowledge
-
 				{
 					cout << "With which player do you want to share knowledge?" << endl;
 					int a = i;
@@ -439,7 +436,6 @@ int main(int argc, char* argv[])
 					players.at(i).shareKnowledge(buddy);
 					break;
 				}
-
 				case '8'://Discover a Cure
 				{
 					players.at(i).discoverCure(newMap);
@@ -457,11 +453,13 @@ int main(int argc, char* argv[])
 					// DOESNT TAKE IN ACCOUNT IF THE PLAYER HAS MORE THAN ONE EVENT CARD
 					bool hasMatchingCard = false;
 					int matchingCardIndex;
-					for (int j = 0; j < players.at(i).getHandSize(); j++) {
-						if (players.at(i).getHand()[j]->getType() == "Event Card") {
-							cout << i << players.at(i).getHand()[j]->getName() << endl;
-							cardId = j;
-							num = players.at(i).getHand()[j]->getId();
+					if (players.at(i).getRole() != "Contingency Planner" || players.at(i).getEventCard().getType() != "Event Card") {
+						for (int j = 0; j < players.at(i).getHandSize(); j++) {
+							if (players.at(i).getHand()[j]->getType() == "Event Card") {
+								cout << i << players.at(i).getHand()[j]->getName() << endl;
+								cardId = j;
+								num = players.at(i).getHand()[j]->getId();
+							}
 						}
 					}
 
@@ -475,13 +473,18 @@ int main(int argc, char* argv[])
 						cin >> choice;
 						while (choice <= 0 || choice > playerNum) cin >> choice;
 
-						cout << "Which city do you want to move to?";
+						cout << "Which city do you want to move it to?";
 						cin >> cityChoice;
 						while (cityChoice <= 0 || cityChoice > 48) cin >> cityChoice;
-
+						//test this out
+						//players.at(i).flight(cityChoice);
 						players.at(i).flight(players.at(i).getHand()[cityChoice]->getId());
 
-						players.at(i).discard(cardId);
+						if (players.at(i).getRole() == "Contingency Planner")
+							players.at(i).removeEvent();
+
+						else 
+							players.at(i).discard(cardId);
 
 						break;
 					}
@@ -495,7 +498,11 @@ int main(int argc, char* argv[])
 						cout << "Which card do you want to remove from the game?" << endl;
 						cin >> discard;
 
-						players.at(i).discard(cardId);
+						if (players.at(i).getRole() == "Contingency Planner") 
+							players.at(i).removeEvent();
+
+						else 
+							players.at(i).discard(cardId);
 
 						break;
 					}
@@ -510,7 +517,11 @@ int main(int argc, char* argv[])
 						players.at(i).buildStation(&newMap);
 						players.at(i).increaseAction();
 
-						players.at(i).discard(cardId);
+						if (players.at(i).getRole() == "Contingency Planner") 
+							players.at(i).removeEvent();
+
+						else
+							players.at(i).discard(cardId);
 
 						break;
 					}
@@ -545,7 +556,11 @@ int main(int argc, char* argv[])
 								cout << temp.at(k).getCityName() << endl;
 							}
 
-							players.at(i).discard(cardId);
+							if (players.at(i).getRole() == "Contingency Planner") 
+								players.at(i).removeEvent();
+
+							else
+								players.at(i).discard(cardId);
 
 						}
 
@@ -585,6 +600,29 @@ int main(int argc, char* argv[])
 						break;
 					}
 
+					if (players.at(i).getRole() == "Contingency Planner")
+					{
+						int pick;
+
+						for (int j = 0; j < discardPile.size(); j++)
+						{
+							if(discardPile[j]->getType()=="Event Card")
+							cout << "Card at index " << j << ": " << discardPile[j]->getName() << endl;
+						}
+
+						cout << "Which event card do you want to add to your role?" << endl;
+						cin >> pick;
+
+						Card event = *discardPile[pick];
+
+						players.at(i).setEventCard(event);
+
+						discardPile[pick] = discardPile.back();
+						discardPile.pop_back();
+
+						break;
+					}
+
 					if (players.at(i).getRole() == "Operations Expert")
 					{
 						players.at(i).displayHand();
@@ -602,7 +640,7 @@ int main(int argc, char* argv[])
 					}
 					else
 					{
-						cout << "You are neither a dispatcher nor a dispatcher you can't do this!";
+						cout << "You are neither a dispatcher, a Contingency Planer nor an Operations Expert you can't do this!";
 						break;
 					}
 
@@ -628,12 +666,20 @@ int main(int argc, char* argv[])
 
 			/////////////INFECT CITIES///////////////
 			isQuietNight = false;
-			for (int j = 0; j < players.at(i).getHandSize(); j++) {
+			if (players.at(i).getRole() == "Contingency Planner" && players.at(i).getEventCard().getName() == "One Quiet Night") 
+			{
+				isQuietNight = true;
+				players.at(i).removeEvent();
+			}
+
+			else for (int j = 0; j < players.at(i).getHandSize(); j++) {
 				if (players.at(i).getHand()[j]->getType() == "Event Card" && players.at(i).getHand()[j]->getName() == "One Quiet Night") {
 					isQuietNight = true;
-					players.at(i).discard(j);
+						players.at(i).discard(j);
 				}
 			}
+
+			
 
 			if (!isQuietNight) {
 				cout << "------------------INFECTION TURN------------------" << endl;
