@@ -1,22 +1,25 @@
-Finish 8 Player actions:
-
 Seynabou: 
-- EVENT CARDS DISCARD CARD IN CASES AND THEN DO INCREASE ACTION
 - Look up I/O again
 - "Clean up"
 
-
 Implement role cards:
-Done:
-Quarantine Specialist, Operations Expert, Researcher, Scientist, Medic (first 2 effects)
+Done: Quarantine Specialist, Operations Expert, Researcher, Scientist, Medic (first 2 effects)
 
-Incomplete:
-Contigency Planner, Dispatcher (half done)
+Incomplete: Contigency Planner, Dispatcher (half done)
 
-Implement some of the commonly overlooked rules (in pdf)
+Implement some of the commonly overlooked rules (in pdf):
+• You do not draw a replacement card after drawing an Epidemic card.
+
+• You may Discover a Cure at any Research Station — the color of its
+city does not need to match the disease you are curing.
+
+• On your turn, you may take a card from another player, if you are both
+in the city that matches the card you are taking.
+
+• On your turn, you may take any City card from the Researcher (only), if you are both in the same city.
+
+• Your hand limit applies immediately after getting a card from another player.
 
 
 Last: (when everything else is done)
 design patterns
-
-
