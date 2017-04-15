@@ -495,6 +495,7 @@ int main(int argc, char* argv[])
 						cout << "Which card do you want to remove from the game?" << endl;
 						cin >> discard;
 
+						players.at(i).discard(cardId);
 
 						break;
 					}
@@ -508,6 +509,8 @@ int main(int argc, char* argv[])
 
 						players.at(i).buildStation(&newMap);
 						players.at(i).increaseAction();
+
+						players.at(i).discard(cardId);
 
 						break;
 					}
@@ -541,6 +544,9 @@ int main(int argc, char* argv[])
 							{
 								cout << temp.at(k).getCityName() << endl;
 							}
+
+							players.at(i).discard(cardId);
+
 						}
 
 						break;
