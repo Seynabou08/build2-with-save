@@ -135,13 +135,12 @@ int main(int argc, char* argv[])
 	// GENERATING ROLE DECK
 	vector<Role*> roleDeck;
 
-	/*string roleNames[] = { "Contingency Planner", "Dispatcher", "Medic",
+	string roleNames[] = { "Contingency Planner", "Dispatcher", "Medic",
 		"Operation Expert", "Quarantine Specialist", "Researcher", "Scientist" };
-		*/
-
-//	string roleNames[] = { "Contingency Planner","Contingency Planner","Contingency Planner","Contingency Planner","Contingency Planner","Contingency Planner","Contingency Planner"};
-
-	string roleNames[] = { "Dispatcher","Dispatcher","Dispatcher","Dispatcher","Dispatcher","Dispatcher","Dispatcher" };
+		
+	// I PUT THESE HERE SO I CAN TEST THE ROLES EASILY. PLEASE DONT REMOVE =3 
+	//string roleNames[] = { "Contingency Planner","Contingency Planner","Contingency Planner","Contingency Planner","Contingency Planner","Contingency Planner","Contingency Planner"};
+	//string roleNames[] = { "Dispatcher","Dispatcher","Dispatcher","Dispatcher","Dispatcher","Dispatcher","Dispatcher" };
 
 	for (int i = 0; i < 7; i++)
 	{
@@ -601,14 +600,15 @@ int main(int argc, char* argv[])
 							cin >> choice;
 						}
 
-						cout << "Which city will you move it to ?";
+						cout << "Which city will you move it to ?"<< endl;
 						for (int k = 0; k < playerNum; k++)
 						{
-							newLoc = newMap.accessCity(players.at(k).getLocation());
-							cout << newLoc->index << " : " << newLoc->getName() << endl;
+							if (k != choice-1) {
+								newLoc = newMap.accessCity(players.at(k).getLocation());
+								cout << newLoc->index << " : " << newLoc->getName() << endl;
+							}
 						}
 
-						newMap.showCity(players.at(choice - 1).getLocation());
 						players.at(choice - 1).move(newMap);
 						players.at(choice - 1).increaseAction();
 						players.at(i).subtractAction();
