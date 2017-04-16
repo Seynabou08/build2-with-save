@@ -28,7 +28,7 @@ int main(int argc, char* argv[])
 
 
 	//displaying the map
-	newMap.showMap();
+	//newMap.showMap();
 
 	//Place the research station in Atlanta.
 
@@ -104,6 +104,9 @@ int main(int argc, char* argv[])
 	// Setting up the player deck and the player discard pile
 	vector<Card*> playerDeck;
 
+	for (int i = 0; i < playerNum; i++)
+		players.at(i).setId(i + 1);
+
 
 	for (int i = 0; i < newMap.cities.size(); i++) {
 		CityCard* ccard = new CityCard(newMap.cities[i]);
@@ -132,9 +135,11 @@ int main(int argc, char* argv[])
 	// GENERATING ROLE DECK
 	vector<Role*> roleDeck;
 
-	string roleNames[] = { "Contingency Planner", "Dispatcher", "Medic",
+	/*string roleNames[] = { "Contingency Planner", "Dispatcher", "Medic",
 		"Operation Expert", "Quarantine Specialist", "Researcher", "Scientist" };
+		*/
 
+	string roleNames[] = { "Dispatcher","Dispatcher","Dispatcher","Dispatcher","Dispatcher","Dispatcher","Dispatcher", };
 
 	for (int i = 0; i < 7; i++)
 	{
@@ -250,35 +255,39 @@ int main(int argc, char* argv[])
 				switch (action) {
 				case '1':	//Drive/Ferry
 				{
-					/*
-					int choice = i;
-
-					if (players.at(i).getRole() == "Contingency Planner")
-					{
-						cout << "Which player's pawn do you want to move?";
-						cin >> choice;
-						while (choice <= 0 || choice > playerNum) cin >> choice;
-
-					}
-					*/
-
-					newMap.showCity(players.at(i).getLocation());
-					players.at(i).move(newMap);
-
-					break;
-				}
-				case '2':	//Direct Flight: Discard a City card to move to the city named on the card.
-				{
-					/*
 					int choice = i;
 
 					if (players.at(i).getRole() == "Dispatcher")
 					{
 						cout << "Which player's pawn do you want to move?";
 						cin >> choice;
-						while (choice <= 0 || choice > playerNum) cin >> choice;
+						while (choice > playerNum || choice <= 0) {
+							cout << "Please enter a number between 1 and " << playerNum <<"." << endl;
+							cin >> choice;
+						}
+
 					}
-					*/
+					cout << choice;
+					newMap.showCity(players.at(choice-1).getLocation());
+					players.at(choice-1).move(newMap);
+					players.at(choice-1).increaseAction();
+					players.at(i).subtractAction();
+
+					break;
+				}
+				case '2':	//Direct Flight: Discard a City card to move to the city named on the card.
+				{
+					int choice = i;
+
+					if (players.at(i).getRole() == "Dispatcher")
+					{
+						cout << "Which player's pawn do you want to move?";
+						cin >> choice;
+						while (choice > playerNum || choice <= 0) {
+							cout << "Please enter a number between 1 and " << playerNum << "." << endl;
+							cin >> choice;
+						}
+					}
 
 					players.at(i).displayHand();
 
@@ -295,24 +304,27 @@ int main(int argc, char* argv[])
 						cin >> cardInt;
 					}
 
-					players.at(i).flight(players.at(i).getHand()[cardInt]->getId());
-
+					players.at(choice-1).flight(players.at(i).getHand()[cardInt]->getId());
+					players.at(choice - 1).increaseAction();
+					players.at(i).subtractAction();
 					players.at(i).discard(cardInt);
 					break;
 				}
 				case '3':	//Charter Flight: Discard the City card that matches the city you are in to move to any city.
 				{
-					/*
+					
 					int choice = i;
 
 					if (players.at(i).getRole() == "Dispatcher")
 					{
 						cout << "Which player's pawn do you want to move?";
 						cin >> choice;
-						while (choice <= 0 || choice > playerNum) cin >> choice;
+						while (choice > playerNum || choice <= 0) {
+							cout << "Please enter a number between 1 and " << playerNum <<"." << endl;
+							cin >> choice;
+						}
 
-					}
-					*/
+					}				
 
 					//check for matching card
 					bool hasMatchingCard = false;
@@ -335,7 +347,9 @@ int main(int argc, char* argv[])
 
 						int cityID;
 						cin >> cityID;
-						players.at(i).flight(cityID);
+						players.at(choice - 1).flight(cityID);
+						players.at(choice - 1).increaseAction();
+						players.at(i).subtractAction();
 						players.at(i).discard(matchingCardIndex);
 					}
 					else {
@@ -346,17 +360,9 @@ int main(int argc, char* argv[])
 				}
 				case '4': //Shuttle Flight	Move from a city with a research station to any other city that has a research station.
 				{
-					/*
+					
 					int choice = i;
 
-					if (players.at(i).getRole() == "Dispatcher")
-					{
-						cout << "Which player's pawn do you want to move?";
-						cin >> choice;
-						while (choice <= 0 || choice > playerNum) cin >> choice;
-
-					}
-					*/
 
 
 					City* location = newMap.accessCity(players.at(i).getLocation());
@@ -364,6 +370,16 @@ int main(int argc, char* argv[])
 
 					if (location->researchCenter == true)
 					{
+
+						if (players.at(i).getRole() == "Dispatcher")
+						{
+							cout << "Which player's pawn do you want to move?";
+							cin >> choice;
+							while (choice > playerNum || choice <= 0) {
+								cout << "Please enter a number between 1 and " << playerNum << "." << endl;
+								cin >> choice;
+							}
+						}
 
 						for (int j = 0; j < 47; j++)
 						{
@@ -378,6 +394,7 @@ int main(int argc, char* argv[])
 						bool isValidCity = false;
 
 						while (!isValidCity) {
+
 							int newLocation;
 							cout << "Enter the ID of the city you want to move to:" << endl;
 							cin >> newLocation;
@@ -390,7 +407,9 @@ int main(int argc, char* argv[])
 							}
 
 							if (isValidCity) {
-								players.at(i).flight(newLocation);
+								players.at(choice - 1).flight(newLocation);
+								players.at(choice - 1).increaseAction();
+								players.at(i).subtractAction();
 								break;
 							}
 						}
@@ -399,21 +418,13 @@ int main(int argc, char* argv[])
 				}
 				case '5': //Building a Research Station
 				{
-					/*The Operations Expert may, as an action, either:
-					 build a research station in his current city without
-					discarding (or using) a City card, or
-					 once per turn, move from a research station to any city
-					by discarding any City card.*/
-
 					players.at(i).buildStation(&newMap);
 					break;
 				}
 
 				case '6':	//Treating a disease
 				{
-
 					players.at(i).treatDisease(newMap); //TODO Might have to add disease cubes back to supply
-
 					break;
 				}
 				case '7': //Sharing knowledge

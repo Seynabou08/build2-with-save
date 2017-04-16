@@ -223,7 +223,7 @@ void Map::startGame() {
 	this->addEdge(46, 47);
 	this->addEdge(47, 1);
 
-	this->showMap();
+	// this->showMap();
 }
 
 
