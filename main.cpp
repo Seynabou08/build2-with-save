@@ -139,7 +139,9 @@ int main(int argc, char* argv[])
 		"Operation Expert", "Quarantine Specialist", "Researcher", "Scientist" };
 		*/
 
-	string roleNames[] = { "Dispatcher","Dispatcher","Dispatcher","Dispatcher","Dispatcher","Dispatcher","Dispatcher", };
+//	string roleNames[] = { "Contingency Planner","Contingency Planner","Contingency Planner","Contingency Planner","Contingency Planner","Contingency Planner","Contingency Planner"};
+
+	string roleNames[] = { "Dispatcher","Dispatcher","Dispatcher","Dispatcher","Dispatcher","Dispatcher","Dispatcher" };
 
 	for (int i = 0; i < 7; i++)
 	{
@@ -243,8 +245,7 @@ int main(int argc, char* argv[])
 				cout << "7. Share Knowledge" << endl;
 				cout << "8. Discover a Cure" << endl;
 				cout << "9. Play event card" << endl;
-				cout << "Player role: " << players.at(i).getRole() << endl;
-				if (players.at(i).getRole() == "Contingency Planner" || players.at(i).getRole() == "Operation Expert"|| 
+				if (players.at(i).getRole() == "Dispatcher" || players.at(i).getRole() == "Operation Expert"|| 
 					(players.at(i).getRole() == "Contingency Planner" && players.at(i).getEventCard().getType() == "Event Card"))
 					cout << "0. Role" << endl;
 
@@ -595,7 +596,10 @@ int main(int argc, char* argv[])
 						cin >> choice;
 
 
-						while (choice <= 0 || choice > playerNum) cin >> choice;
+						while (choice > playerNum || choice <= 0) {
+							cout << "Please enter a number between 1 and " << playerNum << "." << endl;
+							cin >> choice;
+						}
 
 						cout << "Which city will you move it to ?";
 						for (int k = 0; k < playerNum; k++)
@@ -604,9 +608,10 @@ int main(int argc, char* argv[])
 							cout << newLoc->index << " : " << newLoc->getName() << endl;
 						}
 
-
-						newMap.showCity(players.at(choice).getLocation());
-						players.at(choice).move(newMap);
+						newMap.showCity(players.at(choice - 1).getLocation());
+						players.at(choice - 1).move(newMap);
+						players.at(choice - 1).increaseAction();
+						players.at(i).subtractAction();
 
 						break;
 					}
