@@ -153,6 +153,7 @@ int main(int argc, char* argv[])
 	//Shuffling the Player cards randomly
 	random_shuffle(playerDeck.begin(), playerDeck.end());
 	random_shuffle(roleDeck.begin(), roleDeck.end());
+	random_shuffle(roleDeck.begin(), roleDeck.end()); //for testing remove after
 
 
 	//Infection deck initialization
@@ -244,6 +245,7 @@ int main(int argc, char* argv[])
 				cout << "7. Share Knowledge" << endl;
 				cout << "8. Discover a Cure" << endl;
 				cout << "9. Play event card" << endl;
+				cout << players.at(i).getRole() << endl;
 				if (players.at(i).getRole() == "Dispatcher" || players.at(i).getRole() == "Operation Expert"|| 
 					(players.at(i).getRole() == "Contingency Planner" && players.at(i).getEventCard().getType() == "Event Card"))
 					cout << "0. Role" << endl;
@@ -255,8 +257,10 @@ int main(int argc, char* argv[])
 				switch (action) {
 				case '1':	//Drive/Ferry
 				{
+
 					int choice = i;
 
+					/*
 					if (players.at(i).getRole() == "Dispatcher")
 					{
 						cout << "Which player's pawn do you want to move?";
@@ -268,10 +272,11 @@ int main(int argc, char* argv[])
 
 					}
 					cout << choice;
-					newMap.showCity(players.at(choice-1).getLocation());
-					players.at(choice-1).move(newMap);
-					players.at(choice-1).increaseAction();
-					players.at(i).subtractAction();
+					*/
+					newMap.showCity(players.at(i).getLocation());
+					players.at(i).move(newMap);
+					//players.at(choice-1).increaseAction();
+					//players.at(i).subtractAction();
 
 					break;
 				}
@@ -279,6 +284,7 @@ int main(int argc, char* argv[])
 				{
 					int choice = i;
 
+					/*
 					if (players.at(i).getRole() == "Dispatcher")
 					{
 						cout << "Which player's pawn do you want to move?";
@@ -288,6 +294,7 @@ int main(int argc, char* argv[])
 							cin >> choice;
 						}
 					}
+					*/
 
 					players.at(i).displayHand();
 
@@ -304,9 +311,9 @@ int main(int argc, char* argv[])
 						cin >> cardInt;
 					}
 
-					players.at(choice-1).flight(players.at(i).getHand()[cardInt]->getId());
-					players.at(choice - 1).increaseAction();
-					players.at(i).subtractAction();
+					players.at(i).flight(players.at(i).getHand()[cardInt]->getId());
+					//players.at(choice - 1).increaseAction();
+					//players.at(i).subtractAction();
 					players.at(i).discard(cardInt);
 					break;
 				}
@@ -315,6 +322,7 @@ int main(int argc, char* argv[])
 					
 					int choice = i;
 
+					/*
 					if (players.at(i).getRole() == "Dispatcher")
 					{
 						cout << "Which player's pawn do you want to move?";
@@ -324,7 +332,8 @@ int main(int argc, char* argv[])
 							cin >> choice;
 						}
 
-					}				
+					}
+					*/
 
 					//check for matching card
 					bool hasMatchingCard = false;
@@ -347,9 +356,9 @@ int main(int argc, char* argv[])
 
 						int cityID;
 						cin >> cityID;
-						players.at(choice - 1).flight(cityID);
-						players.at(choice - 1).increaseAction();
-						players.at(i).subtractAction();
+						players.at(i).flight(cityID);
+						//players.at(choice - 1).increaseAction();
+						//players.at(i).subtractAction();
 						players.at(i).discard(matchingCardIndex);
 					}
 					else {
@@ -370,7 +379,7 @@ int main(int argc, char* argv[])
 
 					if (location->researchCenter == true)
 					{
-
+						/*
 						if (players.at(i).getRole() == "Dispatcher")
 						{
 							cout << "Which player's pawn do you want to move?";
@@ -380,10 +389,11 @@ int main(int argc, char* argv[])
 								cin >> choice;
 							}
 						}
+						*/
 
 						for (int j = 0; j < 47; j++)
 						{
-							City* newLoc = newMap.accessCity(i);
+							City* newLoc = newMap.accessCity(j);
 							if (newLoc->researchCenter == true)
 							{
 								cout << newLoc->accessCity() << " : " << newLoc->getName();
@@ -407,12 +417,15 @@ int main(int argc, char* argv[])
 							}
 
 							if (isValidCity) {
-								players.at(choice - 1).flight(newLocation);
-								players.at(choice - 1).increaseAction();
-								players.at(i).subtractAction();
+								players.at(i).flight(newLocation);
+								//players.at(choice - 1).increaseAction();
+								//players.at(i).subtractAction();
 								break;
 							}
 						}
+					}
+					else {
+						cout << "Player is not located on a city with a research center" << endl;
 					}
 					break;
 				}
@@ -587,32 +600,7 @@ int main(int argc, char* argv[])
 				{
 					if (players.at(i).getRole() == "Dispatcher")
 					{
-						int choice = i;
-						int location;
-						City* newLoc;
-
-						cout << "Which player's pawn do you want to move?" << endl;
-						cin >> choice;
-
-
-						while (choice > playerNum || choice <= 0) {
-							cout << "Please enter a number between 1 and " << playerNum << "." << endl;
-							cin >> choice;
-						}
-
-						cout << "Which city will you move it to ?"<< endl;
-						for (int k = 0; k < playerNum; k++)
-						{
-							if (k != choice-1) {
-								newLoc = newMap.accessCity(players.at(k).getLocation());
-								cout << newLoc->index << " : " << newLoc->getName() << endl;
-							}
-						}
-
-						players.at(choice - 1).move(newMap);
-						players.at(choice - 1).increaseAction();
-						players.at(i).subtractAction();
-
+						players.at(i).dispatcherAbility(&players, &newMap, i);
 						break;
 					}
 
@@ -639,7 +627,7 @@ int main(int argc, char* argv[])
 						break;
 					}
 
-					if (players.at(i).getRole() == "Operations Expert")
+					if (players.at(i).getRole() == "Operation Expert")
 					{
 						players.at(i).displayHand();
 						cout << "Which city do you want to move to?";

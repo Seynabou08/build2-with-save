@@ -659,7 +659,8 @@ void Player::dispatcherAbility(vector<Player>* players, Map* m, int playerIndex)
 	cout << "Which player's pawn do you want to move?" << endl;
 	cin >> choice;
 
-	while (choice < 0 || choice >= players->size() || choice == playerIndex) cin >> choice;
+	while (choice <= 0 || choice > players->size() || choice == playerIndex+1) cin >> choice;
+	choice--;	//players are displayed 1-4, but indexed 0-3
 
 	cout << "Which ability do you want to do?" << endl;
 	cout << "1: Move pawn to city containing another pawn" << endl;
@@ -684,7 +685,118 @@ void Player::dispatcherAbility(vector<Player>* players, Map* m, int playerIndex)
 		players->at(playerIndex).subtractAction();
 	}
 	else if(ability == 2) { //move another player's pawn as if it was your own
-	
+		cout << "Choose type of movement:" << endl;
+		cout << "1. Drive/Ferry" << endl;
+		cout << "2. Direct Flight" << endl;
+		cout << "3. Charter Flight" << endl;
+		cout << "4. Shuttle Flight" << endl;
+
+		int moveType = 0;
+		while (moveType <=0 || moveType >= 5) {
+			cin >> moveType;
+		}
+
+		if (moveType == 1) {
+			m->showCity(players->at(choice).getLocation());
+			players->at(choice).move(*m);
+			players->at(choice).increaseAction();
+			players->at(playerIndex).subtractAction();
+		}
+		else if (moveType == 2) {
+			players->at(playerIndex).displayHand();
+
+			if (players->at(playerIndex).getHandSize() == 0)
+			{
+				cout << "You are out of city cards select another action." << endl;
+				return;
+			}
+
+			cout << "Which city do you want to move to" << endl;
+
+			int cardInt = -1;
+			while (cardInt == -1 || cardInt >= players->at(playerIndex).getHandSize()) {
+				cin >> cardInt;
+			}
+			players->at(choice).flight(players->at(playerIndex).getHand()[cardInt]->getId());
+			players->at(playerIndex).discard(cardInt);
+			players->at(choice).increaseAction();
+			players->at(playerIndex).subtractAction();
+		}
+		else if (moveType == 3) {
+
+			//check for matching card
+			bool hasMatchingCard = false;		//TODO MATCHING WHOSE LOCATION?
+			int matchingCardIndex;
+			for (int j = 0; j < players->at(playerIndex).getHandSize(); j++) {
+				if (players->at(playerIndex).getHand()[j]->getId() == players->at(playerIndex).getLocation()) {
+					hasMatchingCard = true;
+					matchingCardIndex = j;
+				}
+			}
+
+			if (hasMatchingCard) {
+
+				//SHOW ALL CITIES AND IDs
+				for (int k = 0; k < m->cities.size(); k++) {
+					cout << "(" << k << ") " << m->cities[k]->getName() << endl;
+				}
+
+				cout << "Choose a city to fly to" << endl;
+
+				int cityID;
+				cin >> cityID;
+				players->at(choice).flight(cityID);
+				players->at(playerIndex).discard(matchingCardIndex);
+				players->at(choice).increaseAction();
+				players->at(playerIndex).subtractAction();
+			}
+			else {
+				cout << "You cannot take a charter flight as you do not have a card matching the city you are currently on" << endl;
+			}
+		}
+		else if (moveType == 4) {
+			City* location = m->accessCity(players->at(choice).getLocation());
+			vector<int> validCities; //indexes of cities with research stations
+
+			if (location->researchCenter == true) {
+				for (int j = 0; j < 47; j++)
+				{
+					City* newLoc = m->accessCity(j);
+					if (newLoc->researchCenter == true)
+					{
+						cout << newLoc->accessCity() << " : " << newLoc->getName();
+						validCities.push_back(newLoc->accessCity());
+					}
+				}
+
+				bool isValidCity = false;
+
+				while (!isValidCity) {
+
+					int newLocation;
+					cout << "Enter the ID of the city you want to move to:" << endl;
+					cin >> newLocation;
+
+					//verify if valid city
+					for (int k = 0; k < validCities.size(); k++) {
+						if (newLocation == validCities[k]) {
+							isValidCity = true;
+						}
+					}
+
+					if (isValidCity) {
+						players->at(choice).flight(newLocation);
+						players->at(choice).increaseAction();
+						players->at(playerIndex).subtractAction();
+						break;
+					}
+				}
+			}
+			else {
+				cout << "Player is not located on a city with a research center" << endl;
+			}
+		}
+
 	}
 }
 
@@ -692,7 +804,4 @@ void Player::dispatcherAbility(vector<Player>* players, Map* m, int playerIndex)
 int Player::getHandSize() {
 	return this->cards.size();
 }
-
-
-
 
